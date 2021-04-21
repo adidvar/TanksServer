@@ -4,7 +4,7 @@
 #include "wall.h"
 #include "entity.h"
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <memory>
 #include <SFML/Network.hpp>
 
@@ -16,7 +16,7 @@ class game
 {
     vector<wall*> map; ///< об'єкти карти
     vector<entity*> entites; ///< різні створіння
-    unordered_map<sf::TcpSocket*,player_tank> players; ///< бідінги сокетів до гравців
+    std::map<sf::TcpSocket*,player_tank> players; ///< бідінги сокетів до гравців
     vector<sf::TcpSocket*> socks; ///< список сокетів
 public:
     game() = default;

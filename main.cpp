@@ -5,6 +5,7 @@
 #include <optional>
 #include <tuple>
 #include <string>
+#include <thread>
 
 using namespace std;
 
@@ -25,11 +26,12 @@ int main()
             pending_socket->setBlocking(false);
             g.enter(pending_socket);
             pending_socket = new sf::TcpSocket();
-
        }
        g.read_clinets();
        g.update_map(1.0);
        g.send_update();
+
+       std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
     return 0;
 }
