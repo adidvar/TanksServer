@@ -10,7 +10,7 @@ class player_tank
 {
     string name = "default name";
     Vector2f positions = {0,0};
-    Vector2f speed = {0,0};
+    Vector2f speed = {0,0.01};
     float rotation = 0.0;
 public:
     player_tank() = default;

@@ -26,10 +26,16 @@ void game::read_clinets()
     {
         if(sock==nullptr)continue;
 
-        sf::Packet pk;
-        auto status = sock->receive(pk);
+        char data[1024];
+        unsigned size = 0;
+        
+        auto status = sock->receive(data,1024 , size);
         if(status == sf::TcpSocket::Done)
         {
+            std::cout << "Package from: " << sock->getRemoteAddress().toString() << std::endl;
+            std::stringstream s;
+            s.write(data,size);
+            players[sock].read_state(s);
             /// reading
         }
         if(status == sf::TcpSocket::Disconnected)
@@ -50,24 +56,20 @@ void game::send_update()
 {
  //players map
     stringstream ss("");
-    ss << "players," << players.size() << ',' << player_tank::write_count << ',';
+    ss << "players;" << players.size() << ';' << player_tank::write_count << ';';
     for(auto &i : players){
-        i.second.write_state(ss,',');
-        ss << ',';
+        i.second.write_state(ss,';');
     }
-    ss << "entities," << entites.size() << ',' << entity::write_count << ',';
+    ss << "entities;" << entites.size() << ';' << entity::write_count << ';';
     for(auto &i : entites){
-        i->write_state(ss,',');
-        ss << ',';
+        i->write_state(ss,';');
     }
-    ss << "map," << map.size() << ',' << wall::write_count << ',';
+    ss << "map;" << map.size() << ';' << wall::write_count << ';';
     for(auto &i : map){
-        i->write_state(ss,',');
-        ss << ',';
+        i->write_state(ss,';');
     }
-    sf::Packet pack;
-    pack.append(ss.str().c_str(),ss.str().size());
-
+    
+    unsigned sended = 0;
     for(auto &s : socks)
-        s->send(pack);
+        s->send(ss.str().c_str(),ss.str().size(),sended);
 }
