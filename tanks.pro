@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        bullet.cpp \
         entity.cpp \
         game.cpp \
         main.cpp \
@@ -15,6 +16,7 @@ DISTFILES += \
     request_sketch
 
 HEADERS += \
+    bullet.h \
     entity.h \
     game.h \
     tank.h \

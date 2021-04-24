@@ -24,4 +24,7 @@ map {кількість} {5}
 speed, 1, 2,
 {x speed}, {y_speed}
 
+speed, 1, 2,
+{x speed}, {y_speed}
+
 

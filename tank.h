@@ -9,8 +9,9 @@ using namespace std;
 class player_tank
 {
     string name = "default name";
+    size_t team_id = 0;
     Vector2f positions = {0,0};
-    Vector2f speed = {0,0.01};
+    Vector2f speed = {0,0.01}; ///< x - move speed , y - rotation speed
     float rotation = 0.0;
 public:
     player_tank() = default;
@@ -30,7 +31,7 @@ public:
      */
     void read_state(std::stringstream &s);
 
-    const static unsigned write_count = 4;
+    const static unsigned write_count = 5;
 };
 
 #endif // TANK_H

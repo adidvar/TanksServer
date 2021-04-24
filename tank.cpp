@@ -2,12 +2,13 @@
 
 void player_tank::update(unsigned delta_time)
 {
-    positions = positions + speed*delta_time;
+    positions = positions + Vector2f::fromVector(speed.x , cos(rotation) , sin(rotation));
+    rotation += speed.y;
 }
 
 void player_tank::write_state(stringstream &s , char sep)
 {
-    s << name << sep << positions.x << sep << positions.y << sep << rotation << sep;
+    s << name << sep << positions.x << sep << positions.y << sep << rotation << sep << team_id << sep;
 }
 
 void player_tank::read_state(stringstream &s)

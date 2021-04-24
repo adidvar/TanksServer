@@ -13,7 +13,7 @@ public:
      * @brief оновлює стан системи
      * @param delta_time зміна часу
      */
-    void update(unsigned delta_time){};
+    virtual void update(unsigned delta_time){};
     /**
      * @brief Записує стан в текстовий документ
      * @param s текстовий поток для запису

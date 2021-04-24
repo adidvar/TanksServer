@@ -27,7 +27,7 @@ void game::read_clinets()
         if(sock==nullptr)continue;
 
         char data[1024];
-        unsigned size = 0;
+        size_t size = 0;
         
         auto status = sock->receive(data,1024 , size);
         if(status == sf::TcpSocket::Done)
@@ -69,7 +69,7 @@ void game::send_update()
         i->write_state(ss,';');
     }
     
-    unsigned sended = 0;
+    size_t sended = 0;
     for(auto &s : socks)
         s->send(ss.str().c_str(),ss.str().size(),sended);
 }
