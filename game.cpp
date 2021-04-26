@@ -1,75 +1,38 @@
 #include "game.h"
-#include <sstream>
-#include <algorithm>
-#include <iostream>
+#include "out.h"
+#include <thread>
 
-void game::update_map(float delta_time)
+void game::loop()
 {
-    for(auto &i : this->entites)
-        i->update(delta_time);
-    for(auto &i : this->players)
-        i.second.update(delta_time);
-    for(auto &i : this->map)
-        i->update(delta_time);
-}
-
-void game::enter(sf::TcpSocket *sock)
-{
-    std::cout << "connected:" <<sock->getRemoteAddress().toString() << endl;
-    socks.push_back(sock);
-    players[sock] = player_tank();
-}
-
-void game::read_clinets()
-{
-    for(sf::TcpSocket* &sock : socks)
+    while(true)
     {
-        if(sock==nullptr)continue;
-
-        char data[1024];
-        size_t size = 0;
-        
-        auto status = sock->receive(data,1024 , size);
-        if(status == sf::TcpSocket::Done)
+        auto client = host.Get();
+        if(client.has_value())
         {
-            std::cout << "Package from: " << sock->getRemoteAddress().toString() << std::endl;
-            std::stringstream s;
-            s.write(data,size);
-            players[sock].read_state(s);
-            /// reading
+            shared_ptr<tank> _tank (new tank());
+            auto c = client.value();
+            c->start(_tank,this);
+            this->players[c] = _tank;
+            info("New client");
         }
-        if(status == sf::TcpSocket::Disconnected)
+
+        auto it = find_if(players.begin(),players.end(),[](std::pair<player_controller* , shared_ptr<tank>> t1){return !t1.first->is_valid();});
+        players.erase(it,players.end());
+
+        std::vector<shared_ptr<tank>> visible;
+        for(const auto &i : this->players)
         {
-            /// removing socket
-            std::cout << "disconnected:" <<sock->getRemoteAddress().toString() << endl;
-            players.erase(sock);
-            delete sock;
-            sock = nullptr;
-
+            if(i.second->islive())
+                visible.push_back(i.second);
         }
-    }
-    auto last = std::remove(socks.begin(),socks.end(),nullptr);
-    socks.erase(last,socks.end());
-}
 
-void game::send_update()
-{
- //players map
-    stringstream ss("");
-    ss << "players;" << players.size() << ';' << player_tank::write_count << ';';
-    for(auto &i : players){
-        i.second.write_state(ss,';');
+        for(auto &i : this->players)
+        {
+            i.first->update(visible);
+            i.first->events();
+            i.second->update(1);
+        }
+        this_thread::sleep_for(chrono::milliseconds(20));
+        this_thread::yield();
     }
-    ss << "entities;" << entites.size() << ';' << entity::write_count << ';';
-    for(auto &i : entites){
-        i->write_state(ss,';');
-    }
-    ss << "map;" << map.size() << ';' << wall::write_count << ';';
-    for(auto &i : map){
-        i->write_state(ss,';');
-    }
-    
-    size_t sended = 0;
-    for(auto &s : socks)
-        s->send(ss.str().c_str(),ss.str().size(),sended);
 }

@@ -4,20 +4,26 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        channel.cpp \
         game.cpp \
         main.cpp \
+        server.cpp \
+        player_controller.cpp \
         tank.cpp \
-        vector2f.cpp \
-        wall.cpp
+        vector2f.cpp
 
 DISTFILES += \
     request_sketch
 
 HEADERS += \
+    archive.h \
+    channel.h \
     game.h \
+    out.h \
+    player_controller.h \
+    server.h \
     tank.h \
-    vector2f.h \
-    wall.h
+    vector2f.h
 
 LIBS += -LD:/Libs/SFMLx32/lib/ -lsfml-system -lsfml-network
 
