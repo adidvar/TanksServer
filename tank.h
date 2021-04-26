@@ -11,7 +11,7 @@ class player_tank
     string name = "default name";
     size_t team_id = 0;
     Vector2f positions = {0,0};
-    Vector2f speed = {0,0.01}; ///< x - move speed , y - rotation speed
+    Vector2f speed = {0,0.00}; ///< x - move speed , y - rotation speed
     float rotation = 0.0;
 public:
     player_tank() = default;

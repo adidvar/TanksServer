@@ -1,9 +1,10 @@
 #include "tank.h"
+#include "math.h"
 
 void player_tank::update(unsigned delta_time)
 {
     positions = positions + Vector2f::fromVector(speed.x , cos(rotation) , sin(rotation));
-    rotation += speed.y;
+    rotation +=  speed.y*0.02;
 }
 
 void player_tank::write_state(stringstream &s , char sep)
