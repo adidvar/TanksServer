@@ -62,34 +62,42 @@ void player_controller::update(std::vector<shared_ptr<tank> > visible_unit)
 
 void player_controller::events()
 {
-    //    for(sf::TcpSocket* &sock : socks)
-    //    {
-    //        if(sock==nullptr)continue;
+    if(valid == false)
+        return;
 
-    //        char data[1024];
-    //        size_t size = 0;
+    char data[1024];
+    size_t read = 0;
 
-    //        auto status = sock->receive(data,1024 , size);
-    //        if(status == sf::TcpSocket::Done)
-    //        {
-    //            std::cout << "Package from: " << sock->getRemoteAddress().toString() << std::endl;
-    //            std::stringstream s;
-    //            s.write(data,size);
-    //            players[sock].read_state(s);
-    //            /// reading
-    //        }
-    //        if(status == sf::TcpSocket::Disconnected)
-    //        {
-    //            /// removing socket
-    //            std::cout << "disconnected:" <<sock->getRemoteAddress().toString() << endl;
-    //            players.erase(sock);
-    //            delete sock;
-    //            sock = nullptr;
+    auto done = _channel->read(data,1024 , read);
+    if(done)
+    {
+        info("Get package");
+        std::stringstream s;
+        s.write(data,read);
 
-    //        }
-    //    }
-    //    auto last = std::remove(socks.begin(),socks.end(),nullptr);
-    //    socks.erase(last,socks.end());
+        while(s)
+        {
+            string name;
+            unsigned count , len;
+            s >> name >> count >> len;
+
+            if(name == "speed" && count == 1 && len == 2)
+            {
+                int move , rotate , tower_rotate;
+                s >> move >> rotate >> tower_rotate;
+                _tank->setmove(move,rotate,tower_rotate);
+            }
+
+            if(name == "name" && count == 1 && len == 1)
+            {
+                std::string name;
+                s >> name;
+                _tank->setname(name);
+            }
+
+        }
+
+    }
 }
 
 //    stringstream ss("");

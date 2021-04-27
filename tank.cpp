@@ -84,26 +84,3 @@ string tank::Name()
 //{
 //    s << name << sep << positions.x << sep << positions.y << sep << rotation << sep << team_id << sep;
 //}
-
-//void player_tank::read_state(stringstream &s)
-//{
-//    while(s)
-//    {
-//        string name;
-//        unsigned count , len;
-//        s >> name >> count >> len;
-
-//        if(name == "speed" && count == 1 && len == 2)
-//        {
-//            Vector2f vect;
-//            s >> vect.x >> vect.y;
-//            this->speed = vect;
-//        }
-//        if(name == "name" && count == 1 && len == 1)
-//        {
-//            std::string name;
-//            s >> name;
-//            this->name = name;
-//        }
-//    }
-//}
