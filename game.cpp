@@ -1,5 +1,5 @@
 #include "game.h"
-#include "out.h"
+#include "debug_tools/out.h"
 #include <thread>
 
 void game::loop()
@@ -10,16 +10,22 @@ void game::loop()
         if(client.has_value())
         {
             shared_ptr<tank> _tank (new tank());
-            auto c = client.value();
+            shared_ptr<player_controller> c(client.value());
             c->start(_tank,this);
-            this->players[c] = _tank;
+            this->players.insert({c,_tank});
             info("New client");
         }
 
-        auto it = find_if(players.begin(),players.end(),[](std::pair<player_controller* , shared_ptr<tank>> t1){return !t1.first->is_valid();});
+        auto it = find_if(players.begin(),players.end(),[](const auto &t1){return !t1.first->is_valid();});
         players.erase(it,players.end());
 
+
+        for(map_rect& x : this->_map.wall_data)
+            for(const auto &tank : this->players)
+                collision(&x,tank.second);
+
         std::vector<shared_ptr<tank>> visible;
+
         for(const auto &i : this->players)
         {
             if(i.second->islive())
@@ -32,7 +38,7 @@ void game::loop()
             i.first->events();
             i.second->update(1);
         }
-        this_thread::sleep_for(chrono::milliseconds(20));
+        this_thread::sleep_for(chrono::milliseconds(10));
         this_thread::yield();
     }
 }

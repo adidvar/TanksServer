@@ -2,6 +2,7 @@
 #define ARCHIVE_H
 #include <string>
 #include <sstream>
+#include <vector>
 
 /**
  * @brief Серіалізатор

@@ -14,6 +14,7 @@ struct Vector2f
     static Vector2f fromVector(float forge , float cos, float sin );
 
     float Module() const {return sqrt(pow(x,2) + pow(y,2));}
+    Vector2f Rotate( float sin , float cos) {return {x*cos - y*sin , x*sin + y*cos};};
     Vector2f Nomalize() const {return Vector2f(x/Module(),y/Module());} // повертає співнаправлений вектор довжиною в 1
     Vector2f operator +(Vector2f v2){return Vector2f(this->x + v2.x , this->y + v2.y);}
     Vector2f operator -(Vector2f &v2){return Vector2f(this->x - v2.x , this->y - v2.y);}
@@ -25,5 +26,11 @@ inline Vector2f Vector2f::fromVector(float forge, float cos, float sin)
 {
     return Vector2f(forge * cos , forge * sin );
 }
+
+struct line
+{
+    Vector2f begin;
+    Vector2f end;
+};
 
 #endif // VECTOR2F_H

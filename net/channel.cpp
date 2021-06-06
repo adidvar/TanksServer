@@ -1,5 +1,5 @@
 #include "channel.h"
-#include "out.h"
+#include "debug_tools/out.h"
 
 channel::channel()
 {
@@ -35,7 +35,7 @@ void channel::send(const void *data, std::size_t size)
 
 bool channel::read(void *data, std::size_t size , size_t & read)
 {
-    auto status = sock.send(data,size,read);
+    auto status = sock.receive(data,size,read);
     switch (status) {
     case sf::Socket::Done:
         return true;

@@ -3,11 +3,13 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <collision_up.h>
 
 class game;
 
-#include "player_controller.h"
-#include "server.h"
+#include "net/player_controller.h"
+#include "net/server.h"
+#include "game_map.h"
 
 using namespace std;
 
@@ -18,9 +20,12 @@ using namespace std;
 class game
 {
     Server host;
-    std::unordered_map<player_controller* , shared_ptr<tank>> players; ///< контролери
+    std::unordered_map<shared_ptr<player_controller> , shared_ptr<tank>> players; ///< контролери
 public:
-    game() = default;
+    game():_map("map.txt"){};
+
+    Map _map;
+
     void loop();
     void load_map() = delete;
 

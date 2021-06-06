@@ -1,6 +1,6 @@
 #include "player_controller.h"
 #include "game.h"
-#include "out.h"
+#include "debug_tools/out.h"
 
 player_controller::player_controller(channel *c):
     _channel(c)
@@ -12,6 +12,15 @@ void player_controller::start(shared_ptr<tank> tank, game *game)
 {
     _tank = tank;
     _game = game;
+    archive a;
+    game->_map.write(a);
+    std::string data = a.text();
+    try {
+        this->_channel->send(data.c_str(),data.size());
+    }  catch (disconnect_error &e) {
+        info("disconnected " + this->_tank->Name());
+        valid = false;
+    }
 }
 
 void player_controller::update(std::vector<shared_ptr<tank> > visible_unit)
@@ -54,7 +63,7 @@ void player_controller::update(std::vector<shared_ptr<tank> > visible_unit)
     try {
         this->_channel->send(data.c_str(),data.size());
     }  catch (disconnect_error &e) {
-        info("socket error disconnect");
+         info("disconnected " + this->_tank->Name());
         valid = false;
     }
 
@@ -65,13 +74,20 @@ void player_controller::events()
     if(valid == false)
         return;
 
-    char data[1024];
+    char data[2048];
     size_t read = 0;
 
-    auto done = _channel->read(data,1024 , read);
+
+    bool done;
+    try {
+       done = _channel->read(data,1024 , read);
+    }  catch (disconnect_error &e) {
+        info("disconnected " + this->_tank->Name());
+        valid = false;
+    }
     if(done)
     {
-        info("Get package");
+        info("get package with size " + std::to_string(read));
         std::stringstream s;
         s.write(data,read);
 
@@ -81,39 +97,27 @@ void player_controller::events()
             unsigned count , len;
             s >> name >> count >> len;
 
-            if(name == "speed" && count == 1 && len == 2)
+            if(name == "speed" && count == 1 && len == 3)
             {
                 int move , rotate , tower_rotate;
                 s >> move >> rotate >> tower_rotate;
                 _tank->setmove(move,rotate,tower_rotate);
+                //debug("set speed " + std::to_string(move) + " " + std::to_string(rotate) + " " + std::to_string(tower_rotate));
             }
-
-            if(name == "name" && count == 1 && len == 1)
+            else if(name == "name" && count == 1 && len == 1)
             {
+
                 std::string name;
                 s >> name;
+                debug("set name " + name);
                 _tank->setname(name);
+            }else if (name == "")
+            {} else
+            {
+                warning("unsupported package command" + name);
             }
 
         }
 
     }
 }
-
-//    stringstream ss("");
-//    ss << "players;" << players.size() << ';' << player_tank::write_count << ';';
-//    for(auto &i : players){
-//        i.second.write_state(ss,';');
-//    }
-//    ss << "entities;" << entites.size() << ';' << entity::write_count << ';';
-//    for(auto &i : entites){
-//        i->write_state(ss,';');
-//    }
-//    ss << "map;" << map.size() << ';' << wall::write_count << ';';
-//    for(auto &i : map){
-//        i->write_state(ss,';');
-//    }
-
-//    size_t sended = 0;
-//    for(auto &s : socks)
-//        s->send(ss.str().c_str(),ss.str().size(),sended);

@@ -1,19 +1,20 @@
 #ifndef TANK_H
 #define TANK_H
+
 #include <string>
-#include <vector2f.h>
 #include <functional>
+
+#include "game_map.h"
+#include "math_tools/vector2f.h"
 
 using namespace std;
 
-class tank
+class tank : public rect
 {
+public:
     string name = "NoName";
     size_t team_id = 0;
 
-    Vector2f position = {0,0};
-    const Vector2f size = {2,1};
-    float angle = 0.0;
     float tower_angle = 0.0;
 
     int position_direction = 0;
@@ -22,9 +23,9 @@ class tank
 
     int max_hp = 300;
     int current_hp = 300;
-
 public:
-    tank() = default;
+    tank();
+    ~tank();
     void update(unsigned delta_time);
 
     void setname(std::string name);
@@ -33,6 +34,11 @@ public:
 
     void start(Vector2f position , size_t team_id);
     bool islive();
+
+    std::vector<line> Split();
+
+    void Collision(map_rect *rect , Vector2f normal );
+    std::vector<line> Split() const;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги
     void damage(unsigned damage);
