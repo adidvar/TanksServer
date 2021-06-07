@@ -21,3 +21,8 @@ std::vector<line> rect::Split() const
         line{points[3],points[0]},
     };
 }
+
+float rect::Radius() const
+{
+    return 2.0*sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0,2.0));
+}

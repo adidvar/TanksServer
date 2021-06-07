@@ -3,9 +3,9 @@
 
 #include <math.h>
 
-const float move_speed = -0.03;
-const float rotation_speed = 0.05;
-const float tower_speed = 0.05;
+const float move_speed = -0.02;
+const float rotation_speed = 0.03;
+const float tower_speed = 0.02;
 
 tank::tank():
     rect{{0,0},{2,1},0}
@@ -54,7 +54,13 @@ std::vector<line> tank::Split()
 
 void tank::Collision(map_rect *rect, Vector2f normal)
 {
-    info("Collision");
+    position = position+ normal*(-move_speed);
+}
+
+void tank::Collision(shared_ptr<tank>, Vector2f normal)
+{
+    if(this->position_direction != 0)
+        position = position+ normal*(-move_speed);
 }
 
 void tank::damage(unsigned damage)

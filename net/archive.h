@@ -11,7 +11,10 @@ class archive
 {
     std::stringstream stream;
 public:
-    archive() = default;
+    archive()
+    {
+        stream.precision(10);
+    };
 
     template<typename T>
     void write(T data)

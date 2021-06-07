@@ -87,7 +87,6 @@ void player_controller::events()
     }
     if(done)
     {
-        info("get package with size " + std::to_string(read));
         std::stringstream s;
         s.write(data,read);
 

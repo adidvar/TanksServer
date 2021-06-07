@@ -7,7 +7,7 @@
 #include <mutex>
 
 #include "math_tools/vector2f.h"
-
+/*
 class collision_visualizer
 {
     sf::RenderWindow* window;
@@ -19,5 +19,6 @@ public:
     void render();
     void set_lines(std::vector<line> lines);
 };
+*/
 
 #endif // COLLISION_VISUALIZER_H

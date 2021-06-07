@@ -1,5 +1,5 @@
 #include "collision_visualizer.h"
-
+/*
 collision_visualizer::collision_visualizer()
 {
     th = new  std::thread(&collision_visualizer::render,this);
@@ -47,3 +47,4 @@ void collision_visualizer::set_lines(std::vector<line> lines)
     this->lines = lines;
     l_mutex.unlock();
 }
+*/

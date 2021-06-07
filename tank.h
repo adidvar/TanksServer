@@ -6,6 +6,7 @@
 
 #include "game_map.h"
 #include "math_tools/vector2f.h"
+#include <memory>
 
 using namespace std;
 
@@ -38,6 +39,7 @@ public:
     std::vector<line> Split();
 
     void Collision(map_rect *rect , Vector2f normal );
+    void Collision( shared_ptr<tank> , Vector2f normal );
     std::vector<line> Split() const;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги

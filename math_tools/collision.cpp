@@ -3,7 +3,9 @@
 
 bool in_range(float m1 , float m2 , float value)
 {
-    return (std::min(m1,m2) < value && value < std::max(m1,m2) );
+    if(m1 == m2 == value)
+        return true;
+    return (std::min(m1,m2) <= value && value <= std::max(m1,m2) );
 }
 
 Vector2f generate_normal(line line)
@@ -41,7 +43,7 @@ bool lines_collision(line l1 , line l2 , Vector2f & collision)
     else
     {
         if(in_range(l1.begin.x , l1.end.x , x) &&
-           in_range(l1.begin.y , l1.end.y , x) &&
+           in_range(l1.begin.y , l1.end.y , y) &&
            in_range(l2.begin.x , l2.end.x , x) /* &&
            in_range(l2.begin.y , l2.end.y , y)
                */ )

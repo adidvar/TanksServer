@@ -11,6 +11,7 @@ public:
     Vector2f size;
     float rotate;
     std::vector<line> Split() const;
+    float Radius() const;
 };
 
 #endif // RECT_H

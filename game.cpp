@@ -23,6 +23,11 @@ void game::loop()
         for(map_rect& x : this->_map.wall_data)
             for(const auto &tank : this->players)
                 collision(&x,tank.second);
+        for(auto tank1 : this->players)
+            for(const auto &tank : this->players)
+                if(tank1!=tank)
+                    collision(tank1.second,tank.second);
+
 
         std::vector<shared_ptr<tank>> visible;
 
@@ -39,6 +44,5 @@ void game::loop()
             i.second->update(1);
         }
         this_thread::sleep_for(chrono::milliseconds(10));
-        this_thread::yield();
     }
 }
