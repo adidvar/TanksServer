@@ -10,8 +10,12 @@ class game;
 #include "net/player_controller.h"
 #include "net/server.h"
 #include "game_map.h"
+#include "bullet.h"
+#include "debug_tools/collision_visualizer.h"
 
 using namespace std;
+
+#define SCREEN
 
 
 /**
@@ -19,8 +23,13 @@ using namespace std;
  */
 class game
 {
+#ifdef SCREEN
+    collision_visualizer visual;
+#endif
+
     Server host;
-    std::unordered_map<shared_ptr<player_controller> , shared_ptr<tank>> players; ///< контролери
+    std::vector<shared_ptr<Bullet>> bullets;
+    std::unordered_map<shared_ptr<player_controller> , shared_ptr<Tank>> players; ///< контролери
 public:
     game():_map("map.txt"){};
 
@@ -30,7 +39,7 @@ public:
     void load_map() = delete;
 
 
-    void load_tank(shared_ptr<tank> tank);
+    void load_tank(shared_ptr<Tank> tank);
 };
 
 #endif // GAME_H

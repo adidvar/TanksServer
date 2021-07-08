@@ -1,48 +1,90 @@
 #include "game.h"
 #include "debug_tools/out.h"
 #include <thread>
+#include <time.h>
 
 void game::loop()
 {
     while(true)
     {
-        auto client = host.Get();
-        if(client.has_value())
-        {
-            shared_ptr<tank> _tank (new tank());
-            shared_ptr<player_controller> c(client.value());
-            c->start(_tank,this);
-            this->players.insert({c,_tank});
-            info("New client");
+        size_t begin_timer= clock();
+
+
+        {	///< Добавлення клієнтів в цикл
+            auto client = host.Get();
+            if(client.has_value())
+            {
+                shared_ptr<Tank> _tank (new Tank());
+                shared_ptr<player_controller> c(client.value());
+                c->start(_tank,this);
+                this->players.insert({c,_tank});
+                info("New client");
+            }
         }
 
-        auto it = find_if(players.begin(),players.end(),[](const auto &t1){return !t1.first->is_valid();});
-        players.erase(it,players.end());
+        {   ///< Видалення закритих зєднаннь
+            auto it = find_if(players.begin(),players.end(),[](const auto &t1){return !t1.first->is_valid();});
+            players.erase(it,players.end());
+        }
 
 
-        for(map_rect& x : this->_map.wall_data)
+#ifdef SCREEN
+        {
+            visual.lock();
+            visual.clear();
+            for(auto x : this->_map.wall_data)
+                visual.push(x.Split());
+            for(auto x : this->bullets)
+                visual.push(x->Split());
+            for(auto x : this->players)
+                visual.push(x.second->Split());
+
+
+            visual.unlock();
+        }
+#endif
+
+        {   ///< Цикл колізій
+
+            for(map_rect& x : this->_map.wall_data)
+                for(const auto &tank : this->players)
+                    collision(&x,tank.second);
+
+            for(const auto &tank1 : this->players)
+                for(const auto &tank : this->players)
+                    if(tank1!=tank)
+                        collision(tank1.second,tank.second);
+
+
             for(const auto &tank : this->players)
-                collision(&x,tank.second);
-        for(auto tank1 : this->players)
-            for(const auto &tank : this->players)
-                if(tank1!=tank)
-                    collision(tank1.second,tank.second);
+                for(Bullet::Ptr bullet : this->bullets)
+                      collision(bullet,tank.second);
 
 
-        std::vector<shared_ptr<tank>> visible;
-
-        for(const auto &i : this->players)
-        {
-            if(i.second->islive())
-                visible.push_back(i.second);
         }
 
-        for(auto &i : this->players)
-        {
-            i.first->update(visible);
-            i.first->events();
-            i.second->update(1);
+        {  ///< Цикл відправлення таблиць
+
+            std::vector<shared_ptr<Tank>> visible;
+            for(const auto &i : this->players)
+            {
+                if(i.second->islive())
+                    visible.push_back(i.second);
+            }
+
+            for(auto &i : this->players)
+            {
+                i.first->update(visible);
+                i.first->events();
+                i.second->update(1);
+            }
+
         }
+
+        size_t end_timer=clock();
+
+        info("time"+to_string(end_timer-begin_timer));
+
         this_thread::sleep_for(chrono::milliseconds(10));
     }
 }

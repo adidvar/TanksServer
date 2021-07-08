@@ -5,16 +5,13 @@
 #include <vector>
 
 #include "math_tools/collision.h"
-#include "debug_tools/collision_visualizer.h"
 
 using namespace std;
-
-//extern collision_visualizer view;
 
 template <typename T1 , typename T2>
 void collision( T1 obj1 , T2 obj2)
 {
-    if(obj1->Radius()+obj2->Radius() < (obj1->position - obj2->position).Module() )
+    if(obj1->Radius()+obj2->Radius() <= (obj1->position - obj2->position).Module() )
         return;
 
 
@@ -22,11 +19,6 @@ void collision( T1 obj1 , T2 obj2)
     std::vector<line> l2 = obj2->Split();
 
     Vector2f v1 {0,0}, v2 {0,0};
-
-    auto lines = l1;
-    std::copy(l2.begin(),l2.end(),back_inserter(lines));
-
-  //     view.set_lines(lines);
 
     bool col = false;
 

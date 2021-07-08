@@ -8,9 +8,13 @@
 #include "math_tools/vector2f.h"
 #include <memory>
 
+#include "bullet.h"
+
+class Bullet;
+
 using namespace std;
 
-class tank : public rect
+class Tank : public rect
 {
 public:
     string name = "NoName";
@@ -25,8 +29,10 @@ public:
     int max_hp = 300;
     int current_hp = 300;
 public:
-    tank();
-    ~tank();
+    using ptr = std::shared_ptr<Tank>;
+
+    Tank();
+    ~Tank();
     void update(unsigned delta_time);
 
     void setname(std::string name);
@@ -39,7 +45,9 @@ public:
     std::vector<line> Split();
 
     void Collision(map_rect *rect , Vector2f normal );
-    void Collision( shared_ptr<tank> , Vector2f normal );
+    void Collision( shared_ptr<Tank> , Vector2f normal );
+    void Collision( shared_ptr<Bullet> , Vector2f normal );
+
     std::vector<line> Split() const;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги

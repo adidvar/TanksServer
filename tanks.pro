@@ -4,6 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
+        bullet.cpp \
         collision_up.cpp \
         debug_tools/collision_visualizer.cpp \
         game.cpp \
@@ -21,6 +22,7 @@ DISTFILES += \
     request_sketch
 
 HEADERS += \
+    bullet.h \
     collision_up.h \
     debug_tools/collision_visualizer.h \
     debug_tools/out.h \

@@ -8,7 +8,7 @@ player_controller::player_controller(channel *c):
 
 }
 
-void player_controller::start(shared_ptr<tank> tank, game *game)
+void player_controller::start(shared_ptr<Tank> tank, game *game)
 {
     _tank = tank;
     _game = game;
@@ -23,7 +23,7 @@ void player_controller::start(shared_ptr<tank> tank, game *game)
     }
 }
 
-void player_controller::update(std::vector<shared_ptr<tank> > visible_unit)
+void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
 {
     if(valid == false)
         return;

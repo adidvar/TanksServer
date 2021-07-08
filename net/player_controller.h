@@ -14,7 +14,7 @@ class game;
 class player_controller
 {
     unique_ptr<channel> _channel;
-    shared_ptr<tank> _tank;
+    shared_ptr<Tank> _tank;
     game * _game;
     bool valid = true;
 public:
@@ -24,12 +24,12 @@ public:
      * @param tank танк
      * @param game ігровий клас
      */
-    void start(shared_ptr<tank> tank , game * game);
+    void start(shared_ptr<Tank> tank , game * game);
     /**
      * @brief оновлення інформації
      * @param visible_unit юніти які попадають в обзор
      */
-    void update(std::vector<shared_ptr<tank>> visible_unit); ///< відправка нової інформації
+    void update(std::vector<shared_ptr<Tank>> visible_unit); ///< відправка нової інформації
     /**
      * @brief events обробка інформації яка приходить
      */
