@@ -3,13 +3,12 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
-#include <collision_up.h>
 
 class game;
 
 #include "net/player_controller.h"
 #include "net/server.h"
-#include "game_map.h"
+#include "map.h"
 #include "bullet.h"
 #include "debug_tools/collision_visualizer.h"
 

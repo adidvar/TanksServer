@@ -1,25 +1,23 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include <math_tools/rect.h>
 #include <memory>
-#include <tank.h>
+#include "math_tools/mvector.h"
+#include "object.h"
 
-class Tank;
-
-class Bullet: public rect
+class Bullet: public Object
 {
     unsigned damage;
-    bool valid = true;
+    const static float speed;
+
 public:
+    Bullet(ObjectInterface * interface, Vector position, float angle, unsigned damage);
 
-    using Ptr = std::shared_ptr<Bullet>;
+    void Update();
 
-    Bullet(unsigned damame);
+    virtual void Collision(Object *obj , Vector normal);
 
-    bool is_valid(){return valid;};
-
-    void Collision(std::shared_ptr<Tank> tank , Vector2f normal );
+    friend class player_controller;
 };
 
 #endif // BULLET_H

@@ -5,17 +5,16 @@ CONFIG -= qt
 
 SOURCES += \
         bullet.cpp \
-        collision_up.cpp \
         debug_tools/collision_visualizer.cpp \
         game.cpp \
-        game_map.cpp \
         main.cpp \
+        map.cpp \
         math_tools/collision.cpp \
-        math_tools/rect.cpp \
-        math_tools/vector2f.cpp \
+        math_tools/mvector.cpp \
         net/channel.cpp \
         net/player_controller.cpp \
         net/server.cpp \
+        objectinterface.cpp \
         tank.cpp
 
 DISTFILES += \
@@ -23,18 +22,18 @@ DISTFILES += \
 
 HEADERS += \
     bullet.h \
-    collision_up.h \
     debug_tools/collision_visualizer.h \
     debug_tools/out.h \
     game.h \
-    game_map.h \
+    map.h \
     math_tools/collision.h \
-    math_tools/rect.h \
-    math_tools/vector2f.h \
+    math_tools/mvector.h \
     net/archive.h \
     net/channel.h \
     net/player_controller.h \
     net/server.h \
+    object.h \
+    objectinterface.h \
     tank.h
 
 win32:CONFIG(release, debug|release): LIBS += -LD:/Libs/sfml-64/lib/ -lsfml-network -lsfml-window -lsfml-graphics -lsfml-system

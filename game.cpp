@@ -14,7 +14,7 @@ void game::loop()
             auto client = host.Get();
             if(client.has_value())
             {
-                shared_ptr<Tank> _tank (new Tank());
+                shared_ptr<Tank> _tank (new Tank([this](Bullet*bullet){this->bullets.emplace_back(bullet);}));
                 shared_ptr<player_controller> c(client.value());
                 c->start(_tank,this);
                 this->players.insert({c,_tank});
@@ -32,7 +32,7 @@ void game::loop()
         {
             visual.lock();
             visual.clear();
-            for(auto x : this->_map.wall_data)
+            for(const auto &x : this->_map.wall_data)
                 visual.push(x.Split());
             for(auto x : this->bullets)
                 visual.push(x->Split());
@@ -55,9 +55,8 @@ void game::loop()
                     if(tank1!=tank)
                         collision(tank1.second,tank.second);
 
-
             for(const auto &tank : this->players)
-                for(Bullet::Ptr bullet : this->bullets)
+                for(const Bullet::Ptr &bullet : this->bullets)
                       collision(bullet,tank.second);
 
 
@@ -75,15 +74,24 @@ void game::loop()
             for(auto &i : this->players)
             {
                 i.first->update(visible);
+                i.first->update(bullets);
                 i.first->events();
                 i.second->update(1);
             }
 
         }
 
-        size_t end_timer=clock();
+        { ///< Цикл магії пуль
+            for(auto &i : this->bullets)
+                i->Update(1);
 
-        info("time"+to_string(end_timer-begin_timer));
+            auto it = find_if(bullets.begin(),bullets.end(),[](const auto &t1){return !t1->is_valid();});
+            bullets.erase(it,bullets.end());
+
+
+        }
+
+        size_t end_timer=clock();
 
         this_thread::sleep_for(chrono::milliseconds(10));
     }

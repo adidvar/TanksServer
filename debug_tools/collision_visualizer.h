@@ -6,7 +6,7 @@
 #include <thread>
 #include <mutex>
 
-#include "math_tools/vector2f.h"
+#include "math_tools/mvector.h"
 class collision_visualizer
 {
     sf::RenderWindow* window;

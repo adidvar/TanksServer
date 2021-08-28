@@ -5,7 +5,7 @@
 #define SCALE_SPEED 0.1
 
 /// Швидкість маштабування клавішами P O
-#define KEY_SCALE_SPEED 2
+#define KEY_SCALE_SPEED 0.01
 
 const double scrool_speed = SCALE_SPEED;
 const double key_scale_delta = KEY_SCALE_SPEED;

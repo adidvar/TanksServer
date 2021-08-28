@@ -1,14 +1,19 @@
 #include "bullet.h"
 
-Bullet::Bullet(unsigned dam):
-    damage(dam)
+Bullet::Bullet(ObjectInterface *interface, Vector position , float angle, unsigned damage):
+    Object(interface , position , {0.5f , 0.5f} , angle),
+    damage(damage)
 {
-
 }
 
-void Bullet::Collision(std::shared_ptr<Tank> tank, Vector2f normal)
+void Bullet::Update()
 {
-    if(valid == true)
-        tank->damage(this->damage);
-    valid = false;
+    this->position = position;
+}
+
+void Bullet::Collision(Object *tank, Vector normal)
+{
+    //if(valid == true)
+     //   tank->damage(this->damage);
+    //valid = false;
 }

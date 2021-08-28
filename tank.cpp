@@ -7,52 +7,42 @@ const float move_speed = -0.02;
 const float rotation_speed = 0.03;
 const float tower_speed = 0.02;
 
-Tank::Tank():
-    rect{{0,0},{2,1},0}
-{
-
-}
-
-Tank::~Tank()
+Tank::Tank(ObjectInterface *interface, std::string name, int health_max):
+    Object(interface, {0,0} , {2,1} ,0 ),
+    name(name),
+    health(health_max),
+    health_max(health_max)
 {
 }
 
-void Tank::update(unsigned delta_time)
+void Tank::Update()
 {
-    position = position + Vector2f::fromVector(position_direction * move_speed , sin(rotate) , cos(rotate));
-    rotate += angle_direction * rotation_speed;
-    tower_angle += tower_angle_direction * tower_speed + angle_direction * rotation_speed;
+    position = position + Vector::fromVector(controller.position_direction * move_speed , sin(rotate) , cos(rotate));
+    rotate += controller.angle_direction * rotation_speed;
+    tower_angle += controller.tower_angle_direction * tower_speed + controller.angle_direction * rotation_speed;
 }
 
-void Tank::setname(string name)
+void Tank::SetMove(int move, int rotation, int tower_rotation)
 {
-    this->name = name;
+    this->controller.position_direction = move;
+    this->controller.angle_direction = rotation;
+    this->controller.tower_angle_direction = tower_rotation;
 }
 
-void Tank::setmove(int move, int rotation, int tower_rotation)
+void Tank::Fire()
 {
-    this->position_direction = move;
-    this->angle_direction = rotation;
-    this->tower_angle_direction = tower_rotation;
+   // auto bullet = new Bullet(30 , this->position , Vector2f::fromVector(1,sin(tower_angle),cos(tower_angle)), 0.1);
+   // this->register_bullet(bullet);
 }
 
-void Tank::start(Vector2f position, size_t team_id)
+void Tank::Spawn(Vector position, size_t team_id)
 {
     this->position = position;
     this->team_id = team_id;
+    this->health = health_max;
 }
-
-bool Tank::islive()
-{
-    return current_hp > 0;
-}
-
-std::vector<line> Tank::Split()
-{
-    return rect::Split();
-}
-
-void Tank::Collision(map_rect *rect, Vector2f normal)
+/*
+void Tank::Collision(map_rect *rect, Vector normal)
 {
     info("Coll");
     position = position+ normal*(-move_speed);
@@ -68,48 +58,9 @@ void Tank::Collision(shared_ptr<Bullet>, Vector2f normal)
 {
 
 }
+*/
 
-void Tank::damage(unsigned damage)
+void Tank::Damage(unsigned damage)
 {
-    current_hp -= damage;
-}
-
-Vector2f Tank::Position()
-{
-    return position;
-}
-
-Vector2f Tank::Size()
-{
-    return size;
-}
-
-float Tank::Angle()
-{
-    return rotate;
-}
-
-float Tank::Tower_angle()
-{
-    return tower_angle;
-}
-
-int Tank::Max_hp()
-{
-    return max_hp;
-}
-
-int Tank::Current_hp()
-{
-    return current_hp;
-}
-
-size_t Tank::Team()
-{
-    return team_id;
-}
-
-string Tank::Name()
-{
-    return name;
+    health -= damage;
 }
