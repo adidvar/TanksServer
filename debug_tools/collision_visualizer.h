@@ -7,16 +7,18 @@
 #include <mutex>
 
 #include "math_tools/mvector.h"
+#include "math_tools/shapes.h"
+
 class collision_visualizer
 {
     sf::RenderWindow* window;
     std::thread *th;
-    std::vector<line> lines;
+    std::vector<Line> lines;
     std::mutex l_mutex;
 public:
     collision_visualizer();
     void render();
-    void push(std::vector<line> lines);
+    void push(MultiPointShape lines);
     void clear();
     void lock();
     void unlock();

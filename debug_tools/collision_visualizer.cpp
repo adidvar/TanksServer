@@ -155,6 +155,7 @@ void collision_visualizer::render()
         array.setPrimitiveType(sf::PrimitiveType::Lines);
 
         l_mutex.lock();
+
         for(auto x : lines)
         {
             array.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)}));
@@ -185,7 +186,7 @@ void collision_visualizer::unlock()
     l_mutex.unlock();
 }
 
-void collision_visualizer::push(std::vector<line> lines)
+void collision_visualizer::push(MultiPointShape lines)
 {
-    std::copy(lines.begin(),lines.end(),std::back_inserter(this->lines));
+    lines.ToLines(std::back_inserter(this->lines));
 }

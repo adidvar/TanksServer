@@ -11,6 +11,7 @@ SOURCES += \
         map.cpp \
         math_tools/collision.cpp \
         math_tools/mvector.cpp \
+        math_tools/shapes.cpp \
         net/channel.cpp \
         net/player_controller.cpp \
         net/server.cpp \
@@ -28,6 +29,7 @@ HEADERS += \
     map.h \
     math_tools/collision.h \
     math_tools/mvector.h \
+    math_tools/shapes.h \
     net/archive.h \
     net/channel.h \
     net/player_controller.h \

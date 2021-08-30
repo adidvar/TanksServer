@@ -1,14 +1,15 @@
-#include "math_tools/collision.h"
+#include "collision.h"
+
 #include "math.h"
 
 bool in_range(float m1 , float m2 , float value)
 {
-    if(m1 == m2 == value)
+    if(m1 == m2 && m1==value)
         return true;
     return (std::min(m1,m2) <= value && value <= std::max(m1,m2) );
 }
 
-Vector generate_normal(line line)
+Vector generate_normal(Line line)
 {
     Vector pos = {line.end.x - line.begin.x , line.end.y - line.begin.y};
     return Vector{ -pos.y , pos.x};
@@ -32,9 +33,9 @@ bool cross(float x1, float y1, float x2, float y2, float x3, float y3, float x4,
 }
 
 
-bool lines_collision(line l1 , line l2 , Vector & collision)
+bool lines_collision(Line l1 , Line l2 , Vector & collision)
 {
-    float x , y;
+    float x = 0 , y = 0;
 
     bool result = cross(l1.begin.x,l1.begin.y,l1.end.x ,l1.end.y , l2.begin.x ,l2 .begin.y , l2.end.x , l2.end.y , x , y);
     collision = {x,y};
@@ -53,39 +54,6 @@ bool lines_collision(line l1 , line l2 , Vector & collision)
     }
 }
 /*
-void collision( const MultiPointShape shape1& , const MultiPointShape &shape2&)
-{
-    if(obj1->+obj2->Radius() <= (obj1->position - obj2->position).Module() )
-        return;
-
-
-    std::vector<line> l1 = obj1->Split();
-    std::vector<line> l2 = obj2->Split();
-
-    Vector v1 {0,0}, v2 {0,0};
-
-    bool col = false;
-
-    for( line x1 : l1)
-    {
-        for(line x2 : l2)
-        {
-            Vector position;
-            bool result = lines_collision(x1,x2,position);
-            if(result)
-            {
-                col = true;
-                v1= v1+ generate_normal(x2).Nomalize();
-                v2= v2+ generate_normal(x1).Nomalize();
-            }
-        }
-    }
-    if(col)
-    {
-        obj1->Collision(obj2 , v1);
-        obj2->Collision(obj1 , v2);
-    }
-}
 
 std::vector<line> Split() const
 {
@@ -114,6 +82,43 @@ float ColisionMaxDistance() const
 }
 */
 
+void ExecuteCollision(Object *obj1, Object *obj2)
+{
+ //   if(obj1->+obj2->Radius() <= (obj1->position - obj2->position).Module() )
+ //       return;
 
+    std::vector<Line> lines1;
+    std::vector<Line> lines2;
+    {
+        MultiPointShape shape1 = obj1->Poligon();
+        MultiPointShape shape2 = obj2->Poligon();
+        shape1.ToLines(std::back_inserter(lines1));
+        shape2.ToLines(std::back_inserter(lines2));
+    }
+
+    Vector v1 {0,0}, v2 {0,0};
+
+    bool col = false;
+
+    for(Line x1 : lines1)
+    {
+        for(Line x2 : lines2)
+        {
+            Vector position;
+            bool result = lines_collision(x1,x2,position);
+            if(result)
+            {
+                col = true;
+                v1= v1+ x2.normal;
+                v2= v2+ x1.normal;
+            }
+        }
+    }
+    if(col)
+    {
+        obj1->Collision(obj2 , v1);
+        obj2->Collision(obj1 , v2);
+    }
+}
 
 

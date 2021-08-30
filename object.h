@@ -2,11 +2,12 @@
 #define RECT_H
 
 #include <vector>
-#include "math_tools/collision.h"
+#include "math_tools/shapes.h"
 #include "math_tools/mvector.h"
 #include "objectinterface.h"
 
 class ObjectInterface;
+class MultiPointShape;
 
 class Object
 {
@@ -18,13 +19,13 @@ protected:
     Vector size;
     float rotate;
 
-protected:
+public:
+    Object (ObjectInterface *interface , Vector position , Vector size , float rotate);
+
 
     virtual MultiPointShape Poligon() const;
     virtual float Radius() const;
-
-public:
-    Object (ObjectInterface *interface , Vector position , Vector size , float rotate);
+    friend void ExecuteCollision(Object *obj1 , Object *obj2);
 
     virtual void Update();
 
@@ -41,6 +42,23 @@ inline Object::Object(ObjectInterface *interface, Vector position, Vector size, 
     rotate(rotate)
 {
 
+}
+
+inline MultiPointShape Object::Poligon() const
+{
+    auto shape = PointShape{
+        {
+        {size.x/2.0f , size.y/2.0f},
+        {size.x/2.0f , -size.y/2.0f},
+        {-size.x/2.0f , -size.y/2.0f},
+        {-size.x/2.0f , size.y/2.0f}},
+        true};
+    for(size_t i = 0 ;i < 4 ; i++)
+    {
+        shape.points[i] = shape.points[i].Rotate(rotate);
+        shape.points[i] = shape.points[i] + Vector{position.x,position.y};
+    }
+    return MultiPointShape{std::vector{shape}};
 }
 
 #endif // RECT_H

@@ -1,30 +1,19 @@
-#ifndef COLLISION_MATH_H
-#define COLLISION_MATH_H
+#ifndef COLLISION_H
+#define COLLISION_H
 
-#include "mvector.h"
 #include <vector>
+#include "shapes.h"
+#include "object.h"
 
-struct line
-{
-    Vector begin;
-    Vector end;
-};
+class Object;
 
-class PointShape
-{
-    std::vector<Vector> points;
-    bool convexity; // напрямок роботи даної колізії (внутрішня в середину) (зовнішня навпаки випихає)
-};
+[[deprecated]]
+void ExecuteCollision(Object *obj1 , Object *obj2);
 
-class MultiPointShape
-{
-   std::vector<PointShape> shapes;
+Vector generate_normal(Line line);
 
-    //ОПЕРАТОРИ ПЕРЕТИНУ
-};
+bool lines_collision(Line l1 , Line l2 , Vector &collision);
 
-Vector generate_normal(line line);
 
-bool lines_collision(line l1 , line l2 , Vector &collision);
 
-#endif // COLLISION_MATH_H
+#endif // COLLISION_H
