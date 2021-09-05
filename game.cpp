@@ -3,6 +3,11 @@
 #include <thread>
 #include <time.h>
 
+game::game():
+    map("map.txt" , container)
+{
+}
+
 void game::loop()
 {
     while(true)
@@ -12,40 +17,22 @@ void game::loop()
 
         {	///< Добавлення клієнтів в цикл
             auto client = host.Get();
-            if(client.has_value())
+            if(client != nullptr)
             {
-                shared_ptr<Tank> _tank (new Tank([this](Bullet*bullet){this->bullets.emplace_back(bullet);}));
-                shared_ptr<player_controller> c(client.value());
-                c->start(_tank,this);
-                this->players.insert({c,_tank});
+                shared_ptr<player_controller> c(new player_controller(client,this));
+                this->players.push_back(c);
+                container.Push(c->GetTank());
                 info("New client");
             }
         }
 
         {   ///< Видалення закритих зєднаннь
-            auto it = find_if(players.begin(),players.end(),[](const auto &t1){return !t1.first->is_valid();});
+            auto it = find_if(players.begin(),players.end(),[](const shared_ptr<player_controller> p){return !p->is_valid();});
             players.erase(it,players.end());
         }
 
-
-#ifdef SCREEN
-        {
-            visual.lock();
-            visual.clear();
-            for(const auto &x : this->_map.wall_data)
-                visual.push(x.Split());
-            for(auto x : this->bullets)
-                visual.push(x->Split());
-            for(auto x : this->players)
-                visual.push(x.second->Split());
-
-
-            visual.unlock();
-        }
-#endif
-
         {   ///< Цикл колізій
-
+/*
             for(map_rect& x : this->_map.wall_data)
                 for(const auto &tank : this->players)
                     collision(&x,tank.second);
@@ -59,35 +46,32 @@ void game::loop()
                 for(const Bullet::Ptr &bullet : this->bullets)
                       collision(bullet,tank.second);
 
-
+*/
         }
 
         {  ///< Цикл відправлення таблиць
-
             std::vector<shared_ptr<Tank>> visible;
             for(const auto &i : this->players)
             {
-                if(i.second->islive())
-                    visible.push_back(i.second);
+                visible.push_back(i->GetTank());
             }
 
             for(auto &i : this->players)
             {
-                i.first->update(visible);
-                i.first->update(bullets);
-                i.first->events();
-                i.second->update(1);
+                i->update(visible);
+                i->update(bullets);
+                i->events();
             }
-
         }
+        container.Update();
 
         { ///< Цикл магії пуль
             for(auto &i : this->bullets)
-                i->Update(1);
-
+                i->Update();
+/*
             auto it = find_if(bullets.begin(),bullets.end(),[](const auto &t1){return !t1->is_valid();});
             bullets.erase(it,bullets.end());
-
+*/
 
         }
 

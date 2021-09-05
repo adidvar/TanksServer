@@ -3,7 +3,8 @@
 
 #include <fstream>
 
-Map::Map(std::string url)
+Map::Map(std::string url, Container &container):
+    container(container)
 {
     std::fstream file;
     file.open(url);
@@ -37,6 +38,11 @@ Map::Map(std::string url)
         walls.push_back(std::shared_ptr<Decor>(new Decor(current)));
     }
     file.close();
+
+    for( auto &x : this->walls)
+        container.Push(x);
+
+
 }
 
 void Map::write(archive &a)
@@ -68,13 +74,13 @@ void Map::write(archive &a)
 }
 
 Decor::Decor():
-    Object(nullptr , {0,0} , {0,0} , 0)
+    Object(nullptr , {0,0} , {0,0} , 0 , false)
 {
 
 }
 
 Decor::Decor(Vector position, Vector size, float rotation):
-    Object(nullptr , position , size , rotation)
+    Object(nullptr , position , size , rotation , false)
 {
 
 }

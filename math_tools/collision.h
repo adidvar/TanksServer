@@ -8,7 +8,7 @@
 class Object;
 
 [[deprecated]]
-void ExecuteCollision(Object *obj1 , Object *obj2);
+bool ExecuteCollision(Object *obj1 , Object *obj2);
 
 Vector generate_normal(Line line);
 

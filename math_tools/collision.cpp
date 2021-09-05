@@ -1,5 +1,4 @@
 #include "collision.h"
-
 #include "math.h"
 
 bool in_range(float m1 , float m2 , float value)
@@ -8,12 +7,13 @@ bool in_range(float m1 , float m2 , float value)
         return true;
     return (std::min(m1,m2) <= value && value <= std::max(m1,m2) );
 }
-
+/*
 Vector generate_normal(Line line)
 {
     Vector pos = {line.end.x - line.begin.x , line.end.y - line.begin.y};
     return Vector{ -pos.y , pos.x};
 }
+*/
 
 bool cross(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4 , float &x , float &y) {
     float n;
@@ -45,9 +45,9 @@ bool lines_collision(Line l1 , Line l2 , Vector & collision)
     {
         if(in_range(l1.begin.x , l1.end.x , x) &&
            in_range(l1.begin.y , l1.end.y , y) &&
-           in_range(l2.begin.x , l2.end.x , x) /* &&
+           in_range(l2.begin.x , l2.end.x , x)  &&
            in_range(l2.begin.y , l2.end.y , y)
-               */ )
+                )
             return true;
         else
             return false;
@@ -82,10 +82,10 @@ float ColisionMaxDistance() const
 }
 */
 
-void ExecuteCollision(Object *obj1, Object *obj2)
+bool ExecuteCollision(Object *obj1, Object *obj2)
 {
- //   if(obj1->+obj2->Radius() <= (obj1->position - obj2->position).Module() )
- //       return;
+    if(obj1->Radius() + obj2->Radius() <= (obj1->position - obj2->position).Module() )
+        return false;
 
     std::vector<Line> lines1;
     std::vector<Line> lines2;
@@ -119,6 +119,7 @@ void ExecuteCollision(Object *obj1, Object *obj2)
         obj1->Collision(obj2 , v1);
         obj2->Collision(obj1 , v2);
     }
+    return col;
 }
 
 

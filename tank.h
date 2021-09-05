@@ -19,9 +19,9 @@ protected:
 
     struct Controller
     {
-        int position_direction = 0;
-        int angle_direction = 0;
-        int tower_angle_direction = 0;
+        float position_direction = 0;
+        float angle_direction = 0;
+        float tower_angle_direction = 0;
     } controller;
 
     int health = 300;

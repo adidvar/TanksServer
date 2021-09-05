@@ -8,9 +8,9 @@ void PointShape::ToLines(std::back_insert_iterator<std::vector<Line>> inserter) 
         *inserter = Line{this->points[index-1],this->points[index],normale};
         ++inserter;
     }
-Vector normale = (points[points.size()-1] - points[0]).Rotate(convexity ? M_PI_2 : -M_PI_2).Nomalize();
-*inserter = Line{this->points[points.size()-1],this->points[0],normale};
-++inserter;
+    Vector normale = (points[0]- points[points.size()-1]).Rotate(convexity ? M_PI_2 : -M_PI_2).Nomalize();
+    *inserter = Line{this->points[0],this->points[points.size()-1],normale};
+    ++inserter;
 }
 
 void MultiPointShape::ToLines(std::back_insert_iterator<std::vector<Line>> inserter) const

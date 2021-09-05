@@ -5,6 +5,7 @@ Server::Server()
     listener.listen(33334);
     listener.setBlocking(false);
     chn = new channel;
+    chn->sock.setBlocking(false);
 }
 
 Server::~Server()
@@ -12,14 +13,15 @@ Server::~Server()
     listener.close();
 }
 
-std::optional<player_controller *> Server::Get()
+channel* Server::Get()
 {
     if( listener.accept(chn->sock) == sf::Socket::Done)
     {
-        chn->sock.setBlocking(false);
-        player_controller* player_cnt = new player_controller(chn);
+        auto chanel = chn;
         chn = new channel;
-        return player_cnt;
+        chn->sock.setBlocking(false);
+
+        return chanel;
     }
-    return {};
+    return nullptr;
 }

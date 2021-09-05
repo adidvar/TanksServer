@@ -6,6 +6,7 @@
 
 #include "net/archive.h"
 #include "object.h"
+#include "container.h"
 
 
 class Decor : public Object
@@ -23,8 +24,9 @@ class Map
 protected:
     std::vector<std::shared_ptr<Decor>> walls;
     std::vector<Decor> backgrounds;
+    Container &container;
 public:
-    Map(std::string file);
+    Map(std::string file , Container &container);
 
 
     void write(archive &arc);

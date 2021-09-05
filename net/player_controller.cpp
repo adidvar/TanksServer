@@ -8,7 +8,7 @@ player_controller::player_controller(channel *c , game *game):
     tank( new Tank(nullptr , "The Ivan Python coder" , 300) )
 {
     archive a;
-    game->_map.write(a);
+    game->map.write(a);
     std::string data = a.text();
     try {
         this->_channel->send(data.c_str(),data.size());
@@ -27,7 +27,7 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
     a.write("v_tanks");
     a.write(visible_unit.size());
     a.write(8);
-    for(auto i : visible_unit)
+    for(const auto &i : visible_unit)
     {
         a.write(i->name);
         a.write(i->team_id);
@@ -124,7 +124,7 @@ void player_controller::events()
                 int move , rotate , tower_rotate;
                 s >> move >> rotate >> tower_rotate;
                 tank->SetMove(move,rotate,tower_rotate);
-                //debug("set speed " + std::to_string(move) + " " + std::to_string(rotate) + " " + std::to_string(tower_rotate));
+                debug("set speed " + std::to_string(move) + " " + std::to_string(rotate) + " " + std::to_string(tower_rotate));
             }
             else if(name == "name" && count == 1 && len == 1)
             {

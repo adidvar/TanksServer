@@ -152,7 +152,11 @@ void collision_visualizer::render()
                 window->close();
         }
         sf::VertexArray array;
+        sf::VertexArray normales;
+        sf::VertexArray colis;
         array.setPrimitiveType(sf::PrimitiveType::Lines);
+        normales.setPrimitiveType(sf::PrimitiveType::Lines);
+        colis.setPrimitiveType(sf::PrimitiveType::Lines);
 
         l_mutex.lock();
 
@@ -160,12 +164,23 @@ void collision_visualizer::render()
         {
             array.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)}));
             array.append(sf::Vertex({scale_screen_width(x.begin.x),scale_screen_height(x.begin.y)}));
+
+            normales.append(sf::Vertex({scale_screen_width((x.begin.x + x.end.x)/2.0f  ),scale_screen_height((x.begin.y + x.end.y)/2.0f )}, sf::Color::Red));
+            normales.append(sf::Vertex({scale_screen_width((x.begin.x + x.end.x)/2.0f + x.normal.Nomalize().x/2.0f  ),scale_screen_height((x.begin.y + x.end.y)/2.0f + x.normal.Nomalize().y/2.0f )}, sf::Color::Red));
+
+        }
+        for(auto x : colisions)
+        {
+            colis.append(sf::Vertex({scale_screen_width(x.begin.x),scale_screen_height(x.begin.y)},sf::Color::Green));
+            colis.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)},sf::Color::Green));
         }
         l_mutex.unlock();
 
         window->clear();
 
         window->draw(array);
+        window->draw(normales);
+        window->draw(colis);
 
         window->display();
     }
@@ -174,6 +189,7 @@ void collision_visualizer::render()
 void collision_visualizer::clear()
 {
     lines.clear();
+    colisions.clear();
 }
 
 void collision_visualizer::lock()
@@ -189,4 +205,9 @@ void collision_visualizer::unlock()
 void collision_visualizer::push(MultiPointShape lines)
 {
     lines.ToLines(std::back_inserter(this->lines));
+}
+
+void collision_visualizer::pushCollision(MultiPointShape lines)
+{
+    lines.ToLines(std::back_inserter(this->colisions));
 }

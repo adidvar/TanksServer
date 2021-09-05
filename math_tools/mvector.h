@@ -11,8 +11,7 @@ struct Vector
     Vector(const Vector&) = default;
     float x;
     float y;
-    [[deprecated]]
-    static Vector fromVector(float forge , float cos, float sin );
+    static Vector fromVector(float forge , float angle );
 
     float Module() const {return sqrt(pow(x,2) + pow(y,2));}
     Vector Rotate( float angle ) const {return {x*cos(angle) - y*sin(angle) , x*sin(angle) + y*cos(angle)};};
@@ -23,9 +22,9 @@ struct Vector
     Vector operator /(float f) const {return Vector(this->x /f , this->y /f);}
 };
 
-inline Vector Vector::fromVector(float forge, float cos, float sin)
+inline Vector Vector::fromVector(float forge, float angle)
 {
-    return Vector(forge * cos , forge * sin );
+    return Vector(forge * cos(angle) , forge * sin(angle) );
 }
 
 #endif // MVECTOR_H

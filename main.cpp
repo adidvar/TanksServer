@@ -9,8 +9,5 @@ int main()
     g.loop();
 
 
-    Vector2f vect;
-    cout << lines_collision({{-1, 0},{1, 0}},{{-1, 1},{1, -1}},vect)  << ":" << vect.x << ":" << vect.y << endl;
-
     return 0;
 }

@@ -5,6 +5,7 @@ CONFIG -= qt
 
 SOURCES += \
         bullet.cpp \
+        container.cpp \
         debug_tools/collision_visualizer.cpp \
         game.cpp \
         main.cpp \
@@ -23,6 +24,7 @@ DISTFILES += \
 
 HEADERS += \
     bullet.h \
+    container.h \
     debug_tools/collision_visualizer.h \
     debug_tools/out.h \
     game.h \

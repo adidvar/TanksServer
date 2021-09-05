@@ -16,7 +16,7 @@ public:
     Server();
     ~Server();
 
-    std::optional<player_controller*> Get();
+    channel *Get();
 };
 
 #endif // SERVER_H

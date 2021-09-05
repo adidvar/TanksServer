@@ -11,10 +11,10 @@ class game;
 #include "map.h"
 #include "bullet.h"
 #include "debug_tools/collision_visualizer.h"
+#include "container.h"
 
 using namespace std;
 
-#define SCREEN
 
 
 /**
@@ -22,17 +22,15 @@ using namespace std;
  */
 class game
 {
-#ifdef SCREEN
-    collision_visualizer visual;
-#endif
+    Container container;
 
     Server host;
     std::vector<shared_ptr<Bullet>> bullets;
-    std::unordered_map<shared_ptr<player_controller> , shared_ptr<Tank>> players; ///< контролери
+    std::vector<shared_ptr<player_controller>> players; ///< контролери
 public:
-    game():_map("map.txt"){};
+    game();
 
-    Map _map;
+    Map map;
 
     void loop();
     void load_map() = delete;

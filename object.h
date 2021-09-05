@@ -18,14 +18,14 @@ protected:
     Vector position;
     Vector size;
     float rotate;
+    const bool active; //< визначає чи обєкт буде отримувати колізію
 
 public:
-    Object (ObjectInterface *interface , Vector position , Vector size , float rotate);
-
+    Object (ObjectInterface *interface , Vector position , Vector size , float rotate , bool active);
 
     virtual MultiPointShape Poligon() const;
     virtual float Radius() const;
-    friend void ExecuteCollision(Object *obj1 , Object *obj2);
+    friend bool ExecuteCollision(Object *obj1 , Object *obj2);
 
     virtual void Update();
 
@@ -33,13 +33,15 @@ public:
     virtual void Collision(Object *obj , Vector normal);
     virtual void CollisionEnter(Object *obj , Vector normal);
     virtual void CollisionExit(Object *obj);
+    bool Active();
 };
 
-inline Object::Object(ObjectInterface *interface, Vector position, Vector size, float rotate):
+inline Object::Object(ObjectInterface *interface, Vector position, Vector size, float rotate, bool active):
     interface(interface),
     position(position),
     size(size),
-    rotate(rotate)
+    rotate(rotate),
+    active(active)
 {
 
 }
@@ -59,6 +61,36 @@ inline MultiPointShape Object::Poligon() const
         shape.points[i] = shape.points[i] + Vector{position.x,position.y};
     }
     return MultiPointShape{std::vector{shape}};
+}
+
+inline float Object::Radius() const
+{
+    return 2.0*sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0));
+}
+
+inline void Object::Update()
+{
+
+}
+
+inline void Object::Collision(Object *obj, Vector normal)
+{
+
+}
+
+inline void Object::CollisionEnter(Object *obj, Vector normal)
+{
+
+}
+
+inline void Object::CollisionExit(Object *obj)
+{
+
+}
+
+inline bool Object::Active()
+{
+    return active;
 }
 
 #endif // RECT_H

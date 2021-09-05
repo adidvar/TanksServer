@@ -36,6 +36,8 @@ public:
     void events(); ///< обробка того що прийшло від клієнта
 
     bool is_valid(){return valid;}
+
+    std::shared_ptr<Tank> GetTank(){return tank;};
 };
 
 #endif // PLAYER_CONTROLLER_H
