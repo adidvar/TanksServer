@@ -20,8 +20,7 @@ Map::Map(std::string url, Container &container):
 
         if(!file)
         {
-            cout << "map ... error \n";
-            exit(1);
+            error("map ... error");
         }
 
         backgrounds.push_back(current);
@@ -32,8 +31,7 @@ Map::Map(std::string url, Container &container):
         file >> current.position.x >> current.position.y >> current.size.x >> current.size.y >> current.rotate >> current.texture;
         if(!file)
         {
-            cout << "map ... error \n";
-            exit(1);
+            error("map ... error");
         }
         walls.push_back(std::shared_ptr<Decor>(new Decor(current)));
     }

@@ -7,21 +7,21 @@ using namespace std;
 
 inline void error(std::string str)
 {
-    cout << "ERROR: " <<  str << endl;
-    std::terminate();
+    std::cout << "ERROR: " <<  str << std::endl;
+    std::exit(1);
 }
 
 inline void warning(std::string str)
 {
-    cout << "WARNING: " << str << endl;
+    std::cout << "WARNING: " << str << std::endl;
 }
 inline void debug(std::string str)
 {
-    cout << "DEBUG: " << str << endl;
+    std::cout << "DEBUG: " << str << std::endl;
 }
 inline void info(std::string str)
 {
-    cout << "INFO: " << str << endl;
+    std::cout << "INFO: " << str << std::endl;
 }
 
 #endif // OUT_H

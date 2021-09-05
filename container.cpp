@@ -20,7 +20,7 @@ void Container::Remove(std::shared_ptr<Object> obj)
 void Container::Update()
 {
 
-    auto t = std::remove_if(objects.begin(),objects.end(),[](std::shared_ptr<Object> o){return o.unique();});
+    auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.use_count() == 1;});
     objects.erase(t,objects.end());
     info(to_string(this->objects.size()));
 
