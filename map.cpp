@@ -11,6 +11,8 @@ Map::Map(std::string url, Container &container):
     if(file.is_open()==false)
         error("cant open map.txt");
 
+    info("Map loading...");
+
     Decor current;
     size_t back_c , walls_c;
     file >> back_c;
@@ -20,7 +22,7 @@ Map::Map(std::string url, Container &container):
 
         if(!file)
         {
-            error("map ... error");
+            error("MAP BACKGROUND ERROR");
         }
 
         backgrounds.push_back(current);
@@ -31,11 +33,14 @@ Map::Map(std::string url, Container &container):
         file >> current.position.x >> current.position.y >> current.size.x >> current.size.y >> current.rotate >> current.texture;
         if(!file)
         {
-            error("map ... error");
+            error("MAP FOREGROUND ERROR");
         }
         walls.push_back(std::shared_ptr<Decor>(new Decor(current)));
     }
     file.close();
+
+    info(std::string("Background items ") + to_string(this->backgrounds.size()));
+    info(std::string("Foreground items ") + to_string(this->walls.size()));
 
     for( auto &x : this->walls)
         container.Push(x);

@@ -116,8 +116,10 @@ bool ExecuteCollision(Object *obj1, Object *obj2)
     }
     if(col)
     {
-        obj1->Collision(obj2 , v1);
-        obj2->Collision(obj1 , v2);
+        if(obj1->Active())
+            obj1->Collision(obj2 , v1);
+        if(obj2->Active())
+            obj2->Collision(obj1 , v2);
     }
     return col;
 }

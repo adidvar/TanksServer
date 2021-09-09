@@ -19,6 +19,8 @@ protected:
     Vector size;
     float rotate;
     const bool active; //< визначає чи обєкт буде отримувати колізію
+private:
+    bool is_live = true;
 
 public:
     Object (ObjectInterface *interface , Vector position , Vector size , float rotate , bool active);
@@ -28,6 +30,8 @@ public:
     friend bool ExecuteCollision(Object *obj1 , Object *obj2);
 
     virtual void Update();
+    bool IsLive();
+    void Suicide();
 
     [[deprecated]]
     virtual void Collision(Object *obj , Vector normal);
@@ -35,6 +39,11 @@ public:
     virtual void CollisionExit(Object *obj);
     bool Active();
 };
+
+inline void Object::Suicide()
+{
+    this->is_live = true;
+}
 
 inline Object::Object(ObjectInterface *interface, Vector position, Vector size, float rotate, bool active):
     interface(interface),
@@ -71,6 +80,11 @@ inline float Object::Radius() const
 inline void Object::Update()
 {
 
+}
+
+inline bool Object::IsLive()
+{
+    return this->is_live;
 }
 
 inline void Object::Collision(Object *obj, Vector normal)

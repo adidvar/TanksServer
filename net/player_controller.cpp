@@ -2,6 +2,12 @@
 #include "game.h"
 #include "debug_tools/out.h"
 
+void player_controller::destroy()
+{
+    valid = false;
+    tank->Suicide();
+}
+
 player_controller::player_controller(channel *c , game *game):
     _channel(c),
     _game(game),
@@ -14,7 +20,7 @@ player_controller::player_controller(channel *c , game *game):
         this->_channel->send(data.c_str(),data.size());
     }  catch (disconnect_error &e) {
         info("disconnected " + this->tank->name);
-        valid = false;
+        destroy();
     }
 }
 
@@ -59,7 +65,7 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
         this->_channel->send(data.c_str(),data.size());
     }  catch (disconnect_error &e) {
          info("disconnected " + this->tank->name);
-        valid = false;
+        destroy();
     }
 
 }
@@ -87,7 +93,7 @@ void player_controller::update(std::vector<shared_ptr<Bullet> > bullets)
         this->_channel->send(data.c_str(),data.size());
     }  catch (disconnect_error &e) {
          info("disconnected " + this->tank->name);
-        valid = false;
+        destroy();
     }
 
 }
@@ -106,7 +112,7 @@ void player_controller::events()
        done = _channel->read(data,1024 , read);
     }  catch (disconnect_error &e) {
         info("disconnected " + this->tank->name);
-        valid = false;
+        destroy();
     }
     if(done)
     {

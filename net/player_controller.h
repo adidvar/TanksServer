@@ -20,6 +20,7 @@ class player_controller
     std::shared_ptr<Tank> tank;
     game * _game;
     bool valid = true;
+    void destroy();
 public:
     player_controller(channel *c , game *);
     /**

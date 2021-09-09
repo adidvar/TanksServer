@@ -1,11 +1,5 @@
 #include "objectinterface.h"
 
-ObjectInterface::ObjectInterface(std::function<void (Object *)> destroy):
-    destroy(destroy)
+ObjectInterface::ObjectInterface()
 {
-}
-
-void ObjectInterface::Destory(Object * pointer)
-{
-    destroy(pointer);
 }

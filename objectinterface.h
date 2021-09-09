@@ -9,10 +9,8 @@ class Object;
 
 class ObjectInterface
 {
-    std::function<void(Object*)> destroy;
 public:
-    ObjectInterface(std::function<void(Object*)> destroy);
-    void Destory(Object*);
+    ObjectInterface();
 //    void Notificate(Object* , std::string);
 };
 

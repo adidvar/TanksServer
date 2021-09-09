@@ -20,9 +20,8 @@ void Container::Remove(std::shared_ptr<Object> obj)
 void Container::Update()
 {
 
-    auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.use_count() == 1;});
+    auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return !o->IsLive();});
     objects.erase(t,objects.end());
-    info(to_string(this->objects.size()));
 
     sort(objects.rbegin(),objects.rend(),[](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() < o2->Active();});
     auto active_end = objects.begin();
