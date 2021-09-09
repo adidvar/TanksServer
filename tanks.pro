@@ -13,10 +13,12 @@ SOURCES += \
         math_tools/collision.cpp \
         math_tools/mvector.cpp \
         math_tools/shapes.cpp \
+        module.cpp \
         net/channel.cpp \
         net/player_controller.cpp \
         net/server.cpp \
         objectinterface.cpp \
+        playermodule.cpp \
         tank.cpp
 
 DISTFILES += \
@@ -32,16 +34,21 @@ HEADERS += \
     math_tools/collision.h \
     math_tools/mvector.h \
     math_tools/shapes.h \
+    module.h \
     net/archive.h \
     net/channel.h \
     net/player_controller.h \
     net/server.h \
     object.h \
     objectinterface.h \
+    playermodule.h \
     tank.h
+	
+CONFIG += conan_basic_setup
+include(conanbuildinfo.pri)
 
-win32:CONFIG(release, debug|release): LIBS += -LD:/Libs/sfml-64/lib/ -lsfml-network -lsfml-window -lsfml-graphics -lsfml-system
-else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Libs/sfml-64/lib/ -lsfml-network-d -lsfml-window-d -lsfml-graphics-d -lsfml-system-d
+win32:CONFIG(release, debug|release): LIBS += -LD:/Libs/sfml-64/lib/ -lsfml-network -lsfml-window -lsfml-graphics -lsfml-system -lws2_32
+else:win32:CONFIG(debug, debug|release): LIBS += -LD:/Libs/sfml-64/lib/ -lsfml-network-d -lsfml-window-d -lsfml-graphics-d -lsfml-system-d -lws2_32
 else:unix: LIBS += -LD:/Libs/sfml-64/lib/ -lsfml-network
 
 INCLUDEPATH += D:/Libs/sfml-64/include

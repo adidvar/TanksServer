@@ -6,8 +6,6 @@ using namespace std;
 int main()
 {
     game g;
-    g.loop();
-
-
+    g.run();
     return 0;
 }

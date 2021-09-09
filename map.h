@@ -7,6 +7,7 @@
 #include "net/archive.h"
 #include "object.h"
 #include "container.h"
+#include "module.h"
 
 
 class Decor : public Object
@@ -19,16 +20,15 @@ public:
     Decor(Vector position , Vector size , float rotation);
 };
 
-class Map
+class Map : public Module
 {
 protected:
     std::vector<std::shared_ptr<Decor>> walls;
     std::vector<Decor> backgrounds;
-    Container &container;
 public:
-    Map(std::string file , Container &container);
+    Map(ModuleInterface &interface , std::string file);
 
-
+    virtual void Start() override;
     void write(archive &arc);
 };
 

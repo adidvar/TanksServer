@@ -3,34 +3,20 @@
 #include <thread>
 #include <time.h>
 
+const unsigned delay = 10;
+
 game::game():
-    map("map.txt" , container)
+    update_timer(interface.service,boost::posix_time::millisec(delay))
 {
+    interface.modules.emplace_back(new PlayerModule(interface));
+    interface.modules.emplace_back(new Map(interface,"map.txt"));
+    for(auto &x : interface.modules)
+        x->Start();
+    update_timer.async_wait(boost::bind(&game::update,this,boost::asio::placeholders::error));
 }
 
-void game::loop()
+void game::update(const boost::system::error_code &)
 {
-    while(true)
-    {
-        size_t begin_timer= clock();
-
-
-        {	///< Добавлення клієнтів в цикл
-            auto client = host.Get();
-            if(client != nullptr)
-            {
-                shared_ptr<player_controller> c(new player_controller(client,this));
-                this->players.push_back(c);
-                container.Push(c->GetTank());
-                info("New client");
-            }
-        }
-
-        {   ///< Видалення закритих зєднаннь
-            auto it = find_if(players.begin(),players.end(),[](const shared_ptr<player_controller> p){return !p->is_valid();});
-            players.erase(it,players.end());
-        }
-
         {   ///< Цикл колізій
 /*
             for(map_rect& x : this->_map.wall_data)
@@ -49,25 +35,11 @@ void game::loop()
 */
         }
 
-        {  ///< Цикл відправлення таблиць
-            std::vector<shared_ptr<Tank>> visible;
-            for(const auto &i : this->players)
-            {
-                visible.push_back(i->GetTank());
-            }
-
-            for(auto &i : this->players)
-            {
-                i->update(visible);
-                i->update(bullets);
-                i->events();
-            }
-        }
-        container.Update();
+        interface.container.Update();
 
         { ///< Цикл магії пуль
-            for(auto &i : this->bullets)
-                i->Update();
+         //   for(auto &i : this->bullets)
+         //       i->Update();
 /*
             auto it = find_if(bullets.begin(),bullets.end(),[](const auto &t1){return !t1->is_valid();});
             bullets.erase(it,bullets.end());
@@ -75,8 +47,11 @@ void game::loop()
 
         }
 
-        size_t end_timer=clock();
+    update_timer.expires_from_now(boost::posix_time::millisec(delay));
+    update_timer.async_wait(boost::bind(&game::update,this,boost::asio::placeholders::error));
+}
 
-        this_thread::sleep_for(chrono::milliseconds(10));
-    }
+void game::run()
+{
+    this->interface.service.run();
 }

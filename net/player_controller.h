@@ -7,6 +7,7 @@
 #include "bullet.h"
 #include "archive.h"
 #include "channel.h"
+#include <memory>
 
 class game;
 
@@ -18,11 +19,10 @@ class player_controller
 {
     std::unique_ptr<channel> _channel;
     std::shared_ptr<Tank> tank;
-    game * _game;
     bool valid = true;
     void destroy();
 public:
-    player_controller(channel *c , game *);
+    player_controller(channel *c , std::shared_ptr<Map> map);
     /**
      * @brief оновлення інформації
      * @param visible_unit юніти які попадають в обзор

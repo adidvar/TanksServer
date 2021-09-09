@@ -8,13 +8,12 @@ void player_controller::destroy()
     tank->Suicide();
 }
 
-player_controller::player_controller(channel *c , game *game):
+player_controller::player_controller(channel *c , std::shared_ptr<Map> map):
     _channel(c),
-    _game(game),
     tank( new Tank(nullptr , "The Ivan Python coder" , 300) )
 {
     archive a;
-    game->map.write(a);
+    map->write(a);
     std::string data = a.text();
     try {
         this->_channel->send(data.c_str(),data.size());

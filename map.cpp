@@ -3,8 +3,8 @@
 
 #include <fstream>
 
-Map::Map(std::string url, Container &container):
-    container(container)
+Map::Map(ModuleInterface &interface, std::string url):
+    Module(interface)
 {
     std::fstream file;
     file.open(url);
@@ -42,10 +42,14 @@ Map::Map(std::string url, Container &container):
     info(std::string("Background items ") + to_string(this->backgrounds.size()));
     info(std::string("Foreground items ") + to_string(this->walls.size()));
 
+
+
+}
+
+void Map::Start()
+{
     for( auto &x : this->walls)
-        container.Push(x);
-
-
+        environment.container.Push(x);
 }
 
 void Map::write(archive &a)

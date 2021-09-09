@@ -13,7 +13,6 @@ class Container
 #ifdef SCREEN
     collision_visualizer visual;
 #endif
-
     std::vector<std::shared_ptr<Object>> objects;
 public:
     Container();
