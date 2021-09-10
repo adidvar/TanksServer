@@ -1,5 +1,4 @@
 #include "player_controller.h"
-#include "game.h"
 #include "debug_tools/out.h"
 
 void player_controller::destroy()
@@ -8,19 +7,22 @@ void player_controller::destroy()
     tank->Suicide();
 }
 
-player_controller::player_controller(ObjectInterface &interface , channel *c , std::shared_ptr<Map> map):
-    _channel(c),
+player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> c, std::shared_ptr<Map> map):
+    channel(std::move(c)),
     tank( new  Tank(interface , "The Ivan Python coder" , 300) )
 {
     archive a;
     map->write(a);
     std::string data = a.text();
-    try {
-        this->_channel->send(data.c_str(),data.size());
-    }  catch (disconnect_error &e) {
-        info("disconnected " + this->tank->name);
+
+    boost::system::error_code code;
+    this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
+    if(code)
+    {
+        info("disconnected " + this->tank->name + code.message());
         destroy();
     }
+    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
 }
 
 void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
@@ -60,10 +62,12 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
     a.write(typeid (*tank.get()).name());
 
     auto data = a.text();
-    try {
-        this->_channel->send(data.c_str(),data.size());
-    }  catch (disconnect_error &e) {
-         info("disconnected " + this->tank->name);
+
+    boost::system::error_code code;
+    this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
+    if(code)
+    {
+        info("disconnected " + this->tank->name);
         destroy();
     }
 
@@ -88,35 +92,26 @@ void player_controller::update(std::vector<shared_ptr<Bullet> > bullets)
         a.write("bullet.png");
     }
     auto data = a.text();
-    try {
-        this->_channel->send(data.c_str(),data.size());
-    }  catch (disconnect_error &e) {
-         info("disconnected " + this->tank->name);
+
+    boost::system::error_code code;
+    this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
+    if(code)
+    {
+        info("disconnected " + this->tank->name);
         destroy();
     }
 
 }
 
-void player_controller::events()
+void player_controller::readyread(const boost::system::error_code &code , size_t bytes_transfered)
 {
-    if(valid == false)
+    if (valid == false)
         return;
 
-    char data[2048];
-    size_t read = 0;
-
-
-    bool done;
-    try {
-       done = _channel->read(data,1024 , read);
-    }  catch (disconnect_error &e) {
-        info("disconnected " + this->tank->name);
-        destroy();
-    }
-    if(done)
+    if(!code)
     {
         std::stringstream s;
-        s.write(data,read);
+        s.write(buffer,bytes_transfered);
 
         while(s)
         {
@@ -129,7 +124,6 @@ void player_controller::events()
                 int move , rotate , tower_rotate;
                 s >> move >> rotate >> tower_rotate;
                 tank->SetMove(move,rotate,tower_rotate);
-                debug("set speed " + std::to_string(move) + " " + std::to_string(rotate) + " " + std::to_string(tower_rotate));
             }
             else if(name == "name" && count == 1 && len == 1)
             {
@@ -152,4 +146,5 @@ void player_controller::events()
         }
 
     }
+    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
 }

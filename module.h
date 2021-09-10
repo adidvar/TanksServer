@@ -23,6 +23,7 @@ struct ModuleInterface
             if(dynamic_cast<ModuleType*>(i.get())!=nullptr)
                 return std::dynamic_pointer_cast<ModuleType>(i);
         }
+        return nullptr;
     };
 };
 

@@ -1,6 +1,10 @@
 #ifndef COLLISION_VISUALIZER_H
 #define COLLISION_VISUALIZER_H
 
+//#define SCREEN
+
+#ifdef SCREEN
+
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <thread>
@@ -8,8 +12,6 @@
 
 #include "math_tools/mvector.h"
 #include "math_tools/shapes.h"
-
-#define SCREEN
 
 class collision_visualizer
 {
@@ -27,5 +29,8 @@ public:
     void lock();
     void unlock();
 };
+
+#endif // SCREEN
+
 
 #endif // COLLISION_VISUALIZER_H

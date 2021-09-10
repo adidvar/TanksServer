@@ -1,6 +1,8 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "mvector.h"
 #include <vector>
 #include <iterator>

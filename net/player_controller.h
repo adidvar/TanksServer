@@ -3,22 +3,31 @@
 
 #include <memory>
 
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
+
 #include "tank.h"
 #include "bullet.h"
 #include "archive.h"
-#include "channel.h"
 #include "map.h"
+
+using boost::asio::ip::tcp;
+
+const size_t buffer_size = 1024;
+
 /**
  * @brief Клас який прив'язується до танка і проводити керування ним , в нашому випадку приймає і читає інформацію через канал
  */
 class player_controller
 {
-    std::unique_ptr<channel> _channel;
+    std::unique_ptr<tcp::socket> channel;
     std::shared_ptr<Tank> tank;
     bool valid = true;
     void destroy();
+
+    char buffer[buffer_size];
 public:
-    player_controller(ObjectInterface &interface, channel *c , std::shared_ptr<Map> map);
+    player_controller(ObjectInterface &interface, std::unique_ptr<tcp::socket> , std::shared_ptr<Map> map);
     /**
      * @brief оновлення інформації
      * @param visible_unit юніти які попадають в обзор
@@ -29,8 +38,7 @@ public:
      */
     void update(std::vector<std::shared_ptr<Bullet>> bullets); ///< відправка нової інформації
 
-
-    void events(); ///< обробка того що прийшло від клієнта
+    void readyread(const boost::system::error_code &code , size_t bytes_transfered); ///< обробка того що прийшло від клієнта
 
     bool is_valid(){return valid;}
 
