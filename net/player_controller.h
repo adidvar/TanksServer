@@ -7,11 +7,7 @@
 #include "bullet.h"
 #include "archive.h"
 #include "channel.h"
-#include <memory>
-
-class game;
-
-
+#include "map.h"
 /**
  * @brief Клас який прив'язується до танка і проводити керування ним , в нашому випадку приймає і читає інформацію через канал
  */
@@ -22,7 +18,7 @@ class player_controller
     bool valid = true;
     void destroy();
 public:
-    player_controller(channel *c , std::shared_ptr<Map> map);
+    player_controller(ObjectInterface &interface, channel *c , std::shared_ptr<Map> map);
     /**
      * @brief оновлення інформації
      * @param visible_unit юніти які попадають в обзор

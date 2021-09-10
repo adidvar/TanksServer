@@ -10,6 +10,7 @@ class Module;
 
 struct ModuleInterface
 {
+    ObjectInterface interface;
     boost::asio::io_service service;
     Container container;
     std::vector<std::shared_ptr<Module>> modules;

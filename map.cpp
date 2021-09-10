@@ -13,7 +13,7 @@ Map::Map(ModuleInterface &interface, std::string url):
 
     info("Map loading...");
 
-    Decor current;
+    Decor current(interface.interface);
     size_t back_c , walls_c;
     file >> back_c;
     for(size_t i = 0 ; i < back_c ; i++)
@@ -80,14 +80,14 @@ void Map::write(archive &a)
     }
 }
 
-Decor::Decor():
-    Object(nullptr , {0,0} , {0,0} , 0 , false)
+Decor::Decor(ObjectInterface &interface):
+    Object(interface , {0,0} , {0,0} , 0 , false)
 {
 
 }
 
-Decor::Decor(Vector position, Vector size, float rotation):
-    Object(nullptr , position , size , rotation , false)
+Decor::Decor(ObjectInterface &interface, Vector position, Vector size, float rotation):
+    Object(interface , position , size , rotation , false)
 {
 
 }

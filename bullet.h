@@ -11,7 +11,7 @@ class Bullet: public Object
     const static float speed;
 
 public:
-    Bullet(ObjectInterface * interface, Vector position, float angle, unsigned damage);
+    Bullet(ObjectInterface & interface, Vector position, float angle, unsigned damage);
 
     void Update();
 

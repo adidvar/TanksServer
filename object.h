@@ -13,7 +13,7 @@ class Object
 {
 protected:
 
-    ObjectInterface *interface;
+    ObjectInterface &interface;
 
     Vector position;
     Vector size;
@@ -23,7 +23,7 @@ private:
     bool is_live = true;
 
 public:
-    Object (ObjectInterface *interface , Vector position , Vector size , float rotate , bool active);
+    Object (ObjectInterface &interface , Vector position , Vector size , float rotate , bool active);
 
     virtual MultiPointShape Poligon() const;
     virtual float Radius() const;
@@ -45,7 +45,7 @@ inline void Object::Suicide()
     this->is_live = true;
 }
 
-inline Object::Object(ObjectInterface *interface, Vector position, Vector size, float rotate, bool active):
+inline Object::Object(ObjectInterface &interface, Vector position, Vector size, float rotate, bool active):
     interface(interface),
     position(position),
     size(size),

@@ -7,7 +7,7 @@ const float move_speed = +0.02;
 const float rotation_speed = 0.03;
 const float tower_speed = 0.02;
 
-Tank::Tank(ObjectInterface *interface, std::string name, int health_max):
+Tank::Tank(ObjectInterface &interface, std::string name, int health_max):
     Object(interface, {0,0} , {2,1} ,0 , true),
     name(name),
     health(health_max),

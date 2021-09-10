@@ -2,7 +2,6 @@
 #define OBJECTINTERFACE_H
 
 #include <string>
-#include <functional>
 #include "object.h"
 
 class Object;

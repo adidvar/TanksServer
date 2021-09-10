@@ -1,21 +1,19 @@
 #include "game.h"
 #include "debug_tools/out.h"
-#include <thread>
-#include <time.h>
 
 const unsigned delay = 10;
 
-game::game():
+Game::Game():
     update_timer(interface.service,boost::posix_time::millisec(delay))
 {
     interface.modules.emplace_back(new PlayerModule(interface));
     interface.modules.emplace_back(new Map(interface,"map.txt"));
     for(auto &x : interface.modules)
         x->Start();
-    update_timer.async_wait(boost::bind(&game::update,this,boost::asio::placeholders::error));
+    update_timer.async_wait(boost::bind(&Game::Update,this,boost::asio::placeholders::error));
 }
 
-void game::update(const boost::system::error_code &)
+void Game::Update(const boost::system::error_code &)
 {
         {   ///< Цикл колізій
 /*
@@ -48,10 +46,10 @@ void game::update(const boost::system::error_code &)
         }
 
     update_timer.expires_from_now(boost::posix_time::millisec(delay));
-    update_timer.async_wait(boost::bind(&game::update,this,boost::asio::placeholders::error));
+    update_timer.async_wait(boost::bind(&Game::Update,this,boost::asio::placeholders::error));
 }
 
-void game::run()
+void Game::Run()
 {
     this->interface.service.run();
 }

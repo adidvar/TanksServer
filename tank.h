@@ -3,11 +3,10 @@
 
 #include <string>
 #include <functional>
+#include <memory>
 
 #include "object.h"
-#include "map.h"
 #include "math_tools/mvector.h"
-#include <memory>
 
 class Tank : public Object
 {
@@ -28,7 +27,7 @@ protected:
     int health_max = 300;
 
 public:
-    Tank(ObjectInterface * interface , std::string name , int health_max);
+    Tank(ObjectInterface & interface , std::string name , int health_max);
 
     virtual void Update() override;
 

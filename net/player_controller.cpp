@@ -8,9 +8,9 @@ void player_controller::destroy()
     tank->Suicide();
 }
 
-player_controller::player_controller(channel *c , std::shared_ptr<Map> map):
+player_controller::player_controller(ObjectInterface &interface , channel *c , std::shared_ptr<Map> map):
     _channel(c),
-    tank( new Tank(nullptr , "The Ivan Python coder" , 300) )
+    tank( new  Tank(interface , "The Ivan Python coder" , 300) )
 {
     archive a;
     map->write(a);

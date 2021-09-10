@@ -21,7 +21,7 @@ void PlayerModule::Update(const boost::system::error_code &)
         auto client = host.Get();
         if(client != nullptr)
         {
-            std::shared_ptr<player_controller> c(new player_controller(client,map));
+            std::shared_ptr<player_controller> c(new player_controller(environment.interface,client,map));
             this->players.push_back(c);
             this->environment.container.Push(c->GetTank());
             info("New client");

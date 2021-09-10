@@ -6,9 +6,7 @@
 
 #include "net/archive.h"
 #include "object.h"
-#include "container.h"
 #include "module.h"
-
 
 class Decor : public Object
 {
@@ -16,8 +14,8 @@ protected:
     std::string texture;
     friend class Map;
 public:
-    Decor();
-    Decor(Vector position , Vector size , float rotation);
+    Decor(ObjectInterface &);
+    Decor(ObjectInterface & ,Vector position , Vector size , float rotation);
 };
 
 class Map : public Module
