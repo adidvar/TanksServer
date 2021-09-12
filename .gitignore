@@ -1,21 +1,13 @@
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudio,conan,cmake
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudio,conan,cmake
 
-ALL_BUILD.vcxproj
-ALL_BUILD.vcxproj.filters
-Core.vcxproj
-Core.vcxproj.filters
-Mathematics.vcxproj
-Mathematics.vcxproj.filters
-Net.vcxproj
-Net.vcxproj.filters
-Server.vcxproj
-Server.vcxproj.filters
-TanksServer.sln
-ZERO_CHECK.vcxproj
-ZERO_CHECK.vcxproj.filters
+*.vcxproj
+*.vcxproj.filters
+*.sln
 lib
 out/
+SFML
+*.dll
 
 ### CMake ###
 CMakeLists.txt.user

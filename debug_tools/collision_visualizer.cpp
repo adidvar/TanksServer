@@ -1,6 +1,7 @@
 #include "collision_visualizer.h"
 #include <algorithm>
 
+#ifdef SCREEN
 /// Швидкість маштабування колесиком миші
 #define SCALE_SPEED 0.1
 
@@ -10,7 +11,7 @@
 const double scrool_speed = SCALE_SPEED;
 const double key_scale_delta = KEY_SCALE_SPEED;
 
-const float  width = 1280.0f , height = 720.0f;
+const float  width = 480.0f , height = 480.0f;
 
 float  scale_screen_width(float current_position);
 float  scale_screen_height(float current_position);
@@ -211,3 +212,5 @@ void collision_visualizer::pushCollision(MultiPointShape lines)
 {
     lines.ToLines(std::back_inserter(this->colisions));
 }
+
+#endif

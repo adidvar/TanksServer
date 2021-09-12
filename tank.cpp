@@ -1,11 +1,12 @@
 #include "tank.h"
 #include "debug_tools/out.h"
+#include "map.h"
 
 #include <math.h>
 
-const float move_speed = +0.02;
-const float rotation_speed = 0.03;
-const float tower_speed = 0.02;
+const float move_speed = +0.02f;
+const float rotation_speed = 0.03f;
+const float tower_speed = 0.02f;
 
 Tank::Tank(ObjectInterface &interface, std::string name, int health_max):
     Object(interface, {0,0} , {2,1} ,0 , true),
@@ -31,14 +32,17 @@ void Tank::SetMove(int move, int rotation, int tower_rotation)
 
 void Tank::Fire()
 {
-   // auto bullet = new Bullet(30 , this->position , Vector2f::fromVector(1,sin(tower_angle),cos(tower_angle)), 0.1);
-    // this->register_bullet(bullet);
+    auto bullet = new Bullet(this->interface , this->position , this->tower_angle , 30);
+    interface.SpawnBullet( std::shared_ptr<Bullet>(bullet) );
 }
 
 void Tank::Collision(Object *obj, Vector normal)
 {
-    info("Collision");
-    position = position+ normal*(move_speed);
+    if (dynamic_cast<Decor*>(obj) != nullptr)
+    {
+        info("Collision");
+        position = position + normal * (move_speed);
+    }
 }
 
 MultiPointShape Tank::Poligon() const

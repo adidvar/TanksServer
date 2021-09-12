@@ -20,7 +20,7 @@ void PlayerModule::Start()
 void PlayerModule::Update(const boost::system::error_code &)
 { 
     {   ///< Видалення закритих зєднаннь
-        auto it = find_if(players.begin(),players.end(),[](const std::shared_ptr<player_controller> p){return !p->is_valid();});
+        auto it = remove_if(players.begin(),players.end(),[](const std::shared_ptr<player_controller> p){return !p->is_valid();});
         players.erase(it,players.end());
     }
 

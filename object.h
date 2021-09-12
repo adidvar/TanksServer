@@ -42,7 +42,7 @@ public:
 
 inline void Object::Suicide()
 {
-    this->is_live = true;
+    this->is_live = false;
 }
 
 inline Object::Object(ObjectInterface &interface, Vector position, Vector size, float rotate, bool active):
@@ -74,7 +74,7 @@ inline MultiPointShape Object::Poligon() const
 
 inline float Object::Radius() const
 {
-    return 2.0*sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0));
+    return 2.0*static_cast<float>(sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0)));
 }
 
 inline void Object::Update()

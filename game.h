@@ -12,6 +12,7 @@
 
 #include "playermodule.h"
 #include "map.h"
+#include "bulletmodule.h"
 
 /**
  * @brief Клас з контролем гри
