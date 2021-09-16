@@ -14,7 +14,7 @@ void Bullet::Update()
     this->position = position + Vector::fromVector(speed,rotate);
 }
 
-void Bullet::Collision(Object *tank, Vector normal)
+void Bullet::Collision(class Object *tank, Vector normal)
 {
     if (dynamic_cast<Decor*>(tank) != nullptr)
     {

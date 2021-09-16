@@ -1,18 +1,17 @@
-#ifndef RECT_H
-#define RECT_H
+#ifndef OBJECT_H
+#define OBJECT_H
 
 #include <vector>
+
 #include "math_tools/shapes.h"
 #include "math_tools/mvector.h"
 #include "objectinterface.h"
 
-class ObjectInterface;
 class MultiPointShape;
 
 class Object
 {
 protected:
-
     ObjectInterface &interface;
 
     Vector position;
@@ -74,7 +73,7 @@ inline MultiPointShape Object::Poligon() const
 
 inline float Object::Radius() const
 {
-    return 2.0*static_cast<float>(sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0)));
+    return 2.0f*static_cast<float>(sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0)));
 }
 
 inline void Object::Update()
@@ -107,4 +106,4 @@ inline bool Object::Active()
     return active;
 }
 
-#endif // RECT_H
+#endif

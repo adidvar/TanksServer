@@ -2,6 +2,7 @@
 #define BULLET_H
 
 #include <memory>
+
 #include "math_tools/mvector.h"
 #include "object.h"
 
@@ -9,7 +10,7 @@ class Bullet: public Object
 {
     unsigned damage;
     const static float speed;
-
+    friend class BulletModule;
 public:
     Bullet(ObjectInterface & interface, Vector position, float angle, unsigned damage);
 

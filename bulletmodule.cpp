@@ -19,6 +19,21 @@ void BulletModule::SpawnBullet(std::shared_ptr<Bullet> bullet)
     environment.container.Push(bullet);
 }
 
+void BulletModule::Write(archive& a)
+{
+    a.write("map_background");
+    a.write(this->bullets.size());
+    a.write(6);
+    for(const auto &i : this->bullets)
+    {
+        a.write(i->position.x);
+        a.write(i->position.y);
+        a.write(i->size.x);
+        a.write(i->size.y);
+        a.write(i->rotate);
+    }
+}
+
 void BulletModule::Update(const boost::system::error_code &)
 { 
     {   ///< Видалення закритих зєднанн

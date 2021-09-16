@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <string>
-#include "object.h"
 #include <functional>
 
 class Object;

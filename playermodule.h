@@ -22,8 +22,11 @@ class PlayerModule : public Module
     boost::asio::ip::tcp::acceptor acceptor;
     std::unique_ptr<tcp::socket> socket;
     std::shared_ptr<Map> map;
+
 public:
     PlayerModule(ModuleInterface &interface);
+
+    using Player = player_controller;
 
     virtual void Start() override;
 private:

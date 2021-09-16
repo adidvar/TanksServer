@@ -9,6 +9,7 @@
 
 #include "module.h"
 #include "bullet.h"
+#include "net/archive.h"
 
 class BulletModule: public Module
 {
@@ -19,6 +20,7 @@ public:
 
     virtual void Start() override;
     void SpawnBullet(std::shared_ptr<Bullet> bullet);
+    void Write(archive &arc);
 private:
     void Update(const boost::system::error_code&);
 };
