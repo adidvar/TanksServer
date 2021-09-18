@@ -103,6 +103,17 @@ void player_controller::update(std::vector<shared_ptr<Bullet> > bullets)
 
 }
 
+void player_controller::send(std::string data)
+{
+    boost::system::error_code code;
+    this->channel->send(boost::asio::buffer(data.c_str(), data.size()), 0, code);
+    if (code)
+    {
+        info("disconnected " + this->tank->name);
+        destroy();
+    }
+}
+
 void player_controller::readyread(const boost::system::error_code &code , size_t bytes_transfered)
 {
     if (valid == false)

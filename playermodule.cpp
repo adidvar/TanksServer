@@ -12,6 +12,7 @@ PlayerModule::PlayerModule(ModuleInterface &interface):
 void PlayerModule::Start()
 {
     map = environment.FindModule<Map>();
+    bullets = environment.FindModule<BulletModule>();
     update_timer.async_wait(boost::bind(&PlayerModule::Update,this,boost::asio::placeholders::error));
     socket.reset(new tcp::socket(environment.service));
     acceptor.async_accept(*this->socket.get(),boost::bind(&PlayerModule::Accept,this ,boost::asio::placeholders::error));
@@ -31,10 +32,13 @@ void PlayerModule::Update(const boost::system::error_code &)
             visible.push_back(i->GetTank());
         }
 
+        archive arch;
+        bullets->Write(arch);
+
         for(auto &i : this->players)
         {
             i->update(visible);
-//          i->update(bullets);
+            i->send(arch.text());
         }
     }
 

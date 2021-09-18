@@ -21,7 +21,7 @@ void BulletModule::SpawnBullet(std::shared_ptr<Bullet> bullet)
 
 void BulletModule::Write(archive& a)
 {
-    a.write("map_background");
+    a.write("bullets");
     a.write(this->bullets.size());
     a.write(6);
     for(const auto &i : this->bullets)
@@ -31,6 +31,7 @@ void BulletModule::Write(archive& a)
         a.write(i->size.x);
         a.write(i->size.y);
         a.write(i->rotate);
+        a.write("bullet");  
     }
 }
 

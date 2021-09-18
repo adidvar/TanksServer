@@ -11,7 +11,9 @@
 #include "module.h"
 #include "net/player_controller.h"
 #include "map.h"
+#include "bulletmodule.h"
 #include "debug_tools/out.h"
+#include "net/archive.h"
 
 using boost::asio::ip::tcp;
 
@@ -22,6 +24,7 @@ class PlayerModule : public Module
     boost::asio::ip::tcp::acceptor acceptor;
     std::unique_ptr<tcp::socket> socket;
     std::shared_ptr<Map> map;
+    std::shared_ptr<BulletModule> bullets;
 
 public:
     PlayerModule(ModuleInterface &interface);
