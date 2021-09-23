@@ -33,12 +33,13 @@ void BulletModule::Write(archive& a)
         a.write(i->rotate);
         a.write("bullet");  
     }
+    a.packend();
 }
 
 void BulletModule::Update(const boost::system::error_code &)
 { 
     {   ///< Видалення закритих зєднанн
-        auto it = remove_if(bullets.begin(),bullets.end(),[](const std::shared_ptr<Bullet> p){return !p->IsLive();});
+        auto it = remove_if(bullets.begin(),bullets.end(),[](const std::shared_ptr<Bullet> p){return !p->IsValid();});
         bullets.erase(it,bullets.end());
     }
     update_timer.expires_from_now(boost::posix_time::millisec(delay));

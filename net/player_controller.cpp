@@ -29,6 +29,8 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
 {
     if(valid == false)
         return;
+    if (tank->IsLive() == false)
+        tank->Spawn({ 0,0 }, rand());
 
     archive a;
     a.write("v_tanks");
@@ -45,6 +47,7 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
         a.write(i->rotate);
         a.write(i->tower_angle);
     }
+    a.packend();
     a.write("main_tank");
     a.write(1);
     a.write(12);
@@ -60,23 +63,23 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
     a.write(tank->health);
     a.write(tank->health_max);
     a.write(typeid (*tank.get()).name());
+    a.packend();
 
     auto data = a.text();
-
     boost::system::error_code code;
     this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
-    if(code)
+    if (code)
     {
         info("disconnected " + this->tank->name);
         destroy();
     }
-
 }
 
 void player_controller::update(std::vector<shared_ptr<Bullet> > bullets)
 {
     if(valid == false)
         return;
+
 
     archive a;
     a.write("bullets");

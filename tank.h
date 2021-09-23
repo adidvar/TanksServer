@@ -28,13 +28,15 @@ protected:
     int health_max = 300;
 
 public:
-    Tank(ObjectInterface & interface , std::string name , int health_max);
+    Tank(ObjectInterface & interface , std::string name, int health_max);
 
     virtual void Update() override;
 
     void Spawn(Vector position , size_t team_id);
     void SetMove(int move , int  rotation , int tower_rotation);
     void Fire();
+    size_t Team() { return team_id; };
+    bool IsLive() { return health > 0; };
 
     virtual void Collision(Object *obj , Vector normal) override;
     virtual MultiPointShape Poligon() const override;

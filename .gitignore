@@ -9,6 +9,8 @@ out/
 SFML
 *.dll
 
+*.exe
+
 ### CMake ###
 CMakeLists.txt.user
 CMakeCache.txt
@@ -51,6 +53,9 @@ graph_info.json
 
 # Mono auto generated files
 mono_crash.*
+
+Core.dir
+Server.dir
 
 # Build results
 [Dd]ebug/

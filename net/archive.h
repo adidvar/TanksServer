@@ -19,10 +19,17 @@ public:
     template<typename T>
     void write(T data)
     {
-        stream << data << ";";
+        stream << data << ';';
     }
+	void packend()
+	{
+		stream << ':';
+	}
 
-    std::string text(){return stream.str();};
+    std::string text()
+	{
+		return stream.str();
+	};
 };
 
 #endif // ARCHIVE_H

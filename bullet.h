@@ -10,9 +10,10 @@ class Bullet: public Object
 {
     unsigned damage;
     const static float speed;
+    size_t friend_id;
     friend class BulletModule;
 public:
-    Bullet(ObjectInterface & interface, Vector position, float angle, unsigned damage);
+    Bullet(ObjectInterface & interface, Vector position , size_t friend_id , float angle, unsigned damage);
 
     void Update();
 

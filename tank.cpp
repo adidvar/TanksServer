@@ -32,7 +32,7 @@ void Tank::SetMove(int move, int rotation, int tower_rotation)
 
 void Tank::Fire()
 {
-    auto bullet = new Bullet(this->interface , this->position , this->tower_angle , 30);
+    auto bullet = new Bullet(this->interface , this->position , this->team_id , this->tower_angle , 30);
     interface.SpawnBullet( std::shared_ptr<Bullet>(bullet) );
 }
 

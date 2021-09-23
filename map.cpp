@@ -66,6 +66,7 @@ void Map::write(archive &a)
         a.write(i.rotate);
         a.write(i.texture);
     }
+    a.packend();
     a.write("map_walls");
     a.write(walls.size());
     a.write(6);
@@ -78,6 +79,7 @@ void Map::write(archive &a)
         a.write(i->rotate);
         a.write(i->texture);
     }
+    a.packend();
 }
 
 Decor::Decor(ObjectInterface &interface):

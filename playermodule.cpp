@@ -52,6 +52,7 @@ void PlayerModule::Accept(const boost::system::error_code & error)
     {
             std::shared_ptr<player_controller> c(new player_controller(environment.interface,std::move(socket),map));
             this->players.push_back(c);
+            c->GetTank()->Spawn({ 0,0 }, rand());
             this->environment.container.Push(c->GetTank());
             info("New client");
 

@@ -29,7 +29,7 @@ public:
     friend bool ExecuteCollision(Object *obj1 , Object *obj2);
 
     virtual void Update();
-    bool IsLive();
+    bool IsValid();
     void Suicide();
 
     [[deprecated]]
@@ -81,7 +81,7 @@ inline void Object::Update()
 
 }
 
-inline bool Object::IsLive()
+inline bool Object::IsValid()
 {
     return this->is_live;
 }
