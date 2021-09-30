@@ -1,9 +1,9 @@
 #include "game.h"
 #include "debug_tools/out.h"
 
-#include "playermodule.h"
-#include "map.h"
-#include "bulletmodule.h"
+#include "net/player_controller.h"
+#include "modules/map.h"
+#include "modules/bulletmodule.h"
 
 const unsigned delay = 10;
 
@@ -13,9 +13,9 @@ Game::Game():
     interface.modules.emplace_back(new PlayerModule(interface));
     interface.modules.emplace_back(new Map(interface,"map.txt"));
 
-    auto bulletc = new BulletModule(interface);
-    this->interface.interface.spawnbullet = std::bind(&BulletModule::SpawnBullet, bulletc , std::placeholders::_1);
-    interface.modules.emplace_back(bulletc);
+    //auto bulletc = new BulletModule(interface);
+    //this->interface.interface.spawnbullet = std::bind(&BulletModule::SpawnBullet, bulletc , std::placeholders::_1);
+   // interface.modules.emplace_back(bulletc);
    
     for(auto &x : interface.modules)
         x->Start();

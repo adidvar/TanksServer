@@ -2,8 +2,8 @@
 
 #include <cmath>
 
-#include "debug_tools/out.h"
-#include "map.h"
+#include "../debug_tools/out.h"
+#include "../modules/map.h"
 #include "bullet.h"
 
 const float move_speed = +0.02f;

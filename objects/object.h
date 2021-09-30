@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "math_tools/shapes.h"
-#include "math_tools/mvector.h"
+#include "../math/shapes.h"
+#include "../math/mvector.h"
 #include "objectinterface.h"
 
 class Object

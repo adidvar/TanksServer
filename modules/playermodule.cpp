@@ -1,6 +1,6 @@
 #include "playermodule.h"
-#include "net/archive.h"
-#include "debug_tools/out.h"
+#include "../net/archive.h"
+#include "../debug_tools/out.h"
 
 const unsigned delay = 10;
 
@@ -28,14 +28,10 @@ void PlayerModule::Update(const boost::system::error_code &)
     {  ///< Цикл відправлення таблиць
         std::vector<std::shared_ptr<Tank>> visible;
         for(const auto &i : this->players)
-        {
             visible.push_back(i->GetTank());
-        }
 
         for(auto &i : this->players)
-        {
             i->update(visible);
-        }
     }
 
     update_timer.expires_from_now(boost::posix_time::millisec(delay));

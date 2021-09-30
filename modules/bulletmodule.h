@@ -8,10 +8,10 @@
 #include <boost/bind.hpp>
 
 #include "module.h"
-#include "bullet.h"
+#include "../objects/bullet.h"
 #include "playermodule.h"
 
-#include "net/archive.h"
+#include "../net/archive.h"
 
 class BulletModule: public Module
 {

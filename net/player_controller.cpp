@@ -1,5 +1,6 @@
 #include "player_controller.h"
-#include "debug_tools/out.h"
+
+#include "../debug_tools/out.h"
 #include "archive.h"
 
 void player_controller::destroy()
@@ -65,37 +66,6 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
         info("disconnected " + this->tank->name);
         destroy();
     }
-}
-
-void player_controller::update(std::vector<shared_ptr<Bullet> > bullets)
-{
-    if(valid == false)
-        return;
-
-
-    archive a;
-    a.write("bullets");
-    a.write(bullets.size());
-    a.write(6);
-    for(const auto &i : bullets)
-    {
-        a.write(i->position.x);
-        a.write(i->position.y);
-        a.write(i->size.x);
-        a.write(i->size.y);
-        a.write(i->rotate);
-        a.write("bullet.png");
-    }
-    auto data = a.text();
-
-    boost::system::error_code code;
-    this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
-    if(code)
-    {
-        info("disconnected " + this->tank->name);
-        destroy();
-    }
-
 }
 
 void player_controller::send(std::string data)

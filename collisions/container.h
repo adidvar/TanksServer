@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 
-#include "object.h"
-#include "debug_tools/collision_visualizer.h"
+#include "../objects/object.h"
+#include "../collisions/collision_visualizer.h"
 
 class Container
 {

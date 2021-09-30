@@ -4,8 +4,8 @@
 #include <string>
 #include <memory>
 
-#include "net/archive.h"
-#include "object.h"
+#include "../net/archive.h"
+#include "../objects/object.h"
 #include "module.h"
 
 class Decor : public Object

@@ -1,4 +1,4 @@
-#include "math_tools/shapes.h"
+#include "shapes.h"
 
 void PointShape::ToLines(std::back_insert_iterator<std::vector<Line>> inserter) const
 {

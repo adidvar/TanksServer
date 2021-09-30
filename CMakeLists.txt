@@ -18,12 +18,18 @@ add_library(MathTools math/mvector.h math/mvector.cpp math/shapes.h math/shapes.
 
 add_library(Collisions collisions/collision.h collisions/collision.cpp collisions/collision_visualizer.h collisions/collision_visualizer.cpp collisions/container.h collisions/container.cpp)
 
+add_library(PlayerModule modules/playermodule.h modules/playermodule.cpp objects/tank.h objects/tank.cpp net/player_controller.h net/player_controller.cpp)
+
+add_library(MapModule modules/map.h modules/map.cpp)
+
+add_library(BulletModule modules/bulletmodule.h modules/bulletmodule.cpp objects/bullet.h objects/bullet.cpp)
+
 #target_link_libraries(Core sfml-system sfml-window sfml-graphics)
 #target_include_directories(Core PRIVATE ./SFML/include/)
 #target_link_directories(Core ./SFML/lib/)
 
 add_executable(Server main.cpp)
-target_link_libraries(Server Core Module Object MathTools Collisions)
+target_link_libraries(Server Core Module Object MathTools Collisions PlayerModule BulletModule MapModule)
 
 
  

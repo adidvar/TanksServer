@@ -5,7 +5,7 @@
 #include <memory>
 
 #include "object.h"
-#include "math_tools/mvector.h"
+#include "../math/mvector.h"
 
 class Tank : public Object
 {

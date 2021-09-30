@@ -1,7 +1,7 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include "math_tools/mvector.h"
+#include "../math/mvector.h"
 #include "object.h"
 
 class Bullet: public Object

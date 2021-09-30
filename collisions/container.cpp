@@ -2,8 +2,8 @@
 
 #include <algorithm>
 
-#include "debug_tools/out.h"
-#include "math_tools/collision.h"
+#include "../debug_tools/out.h"
+#include "../collisions/collision.h"
 
 Container::Container()
 {

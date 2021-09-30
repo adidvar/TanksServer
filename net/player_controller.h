@@ -6,8 +6,7 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
-#include "tank.h"
-#include "bullet.h"
+#include "../objects/tank.h"
 
 using boost::asio::ip::tcp;
 
@@ -34,7 +33,6 @@ public:
     /**
      * @brief events обробка інформації яка приходить
      */
-    void update(std::vector<std::shared_ptr<Bullet>> bullets); ///< відправка нової інформації
     void send(std::string data);
 
     void readyread(const boost::system::error_code &code , size_t bytes_transfered); ///< обробка того що прийшло від клієнта

@@ -9,8 +9,8 @@
 #include <boost/bind/bind.hpp>
 
 #include "module.h"
-#include "net/player_controller.h"
-#include "net/archive.h"
+#include "../net/player_controller.h"
+#include "../net/archive.h"
 
 using boost::asio::ip::tcp;
 
