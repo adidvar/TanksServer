@@ -13,7 +13,7 @@ Map::Map(ModuleInterface &interface, std::string url):
 
     info("Map loading...");
 
-    Decor current(interface.interface);
+    Decor current(interface.ObjInterface());
     size_t back_c , walls_c;
     file >> back_c;
     for(size_t i = 0 ; i < back_c ; i++)
@@ -49,11 +49,12 @@ Map::Map(ModuleInterface &interface, std::string url):
 void Map::Start()
 {
     for( auto &x : this->walls)
-        environment.container.Push(x);
+        environment.Physics().Push(x);
 }
 
 void Map::write(archive &a)
 {
+    a.write("table");
     a.write("map_background");
     a.write(backgrounds.size());
     a.write(6);
@@ -67,6 +68,7 @@ void Map::write(archive &a)
         a.write(i.texture);
     }
     a.packend();
+    a.write("table");
     a.write("map_walls");
     a.write(walls.size());
     a.write(6);

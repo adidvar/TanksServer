@@ -1,10 +1,10 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
-#include "object.h"
-#include <object.h>
+
 #include <vector>
 #include <memory>
-#include "math_tools/collision.h"
+
+#include "object.h"
 #include "debug_tools/collision_visualizer.h"
 
 class Container

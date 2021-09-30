@@ -1,6 +1,9 @@
 #include "container.h"
+
 #include <algorithm>
+
 #include "debug_tools/out.h"
+#include "math_tools/collision.h"
 
 Container::Container()
 {

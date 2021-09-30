@@ -1,7 +1,7 @@
 #ifndef COLLISION_VISUALIZER_H
 #define COLLISION_VISUALIZER_H
 
-#define SCREEN
+//#define SCREEN
 
 #ifdef SCREEN
 

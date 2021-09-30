@@ -9,11 +9,14 @@
 
 #include "module.h"
 #include "bullet.h"
+#include "playermodule.h"
+
 #include "net/archive.h"
 
 class BulletModule: public Module
 {
     std::vector<std::shared_ptr<Bullet>> bullets; ///< контролери
+    std::shared_ptr<PlayerModule> player;
     boost::asio::deadline_timer update_timer;
 public:
     BulletModule(ModuleInterface &interface);

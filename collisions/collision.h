@@ -1,7 +1,6 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include <vector>
 #include "shapes.h"
 #include "object.h"
 

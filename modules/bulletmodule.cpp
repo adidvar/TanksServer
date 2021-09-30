@@ -4,23 +4,25 @@ const unsigned delay = 10;
 
 BulletModule::BulletModule(ModuleInterface &interface):
     Module(interface),
-    update_timer(interface.service,boost::posix_time::millisec(delay))
+    update_timer(interface.Service(),boost::posix_time::millisec(delay))
 {
 }
 
 void BulletModule::Start()
 {
+    player = environment.FindModule<PlayerModule>();
     update_timer.async_wait(boost::bind(&BulletModule::Update,this,boost::asio::placeholders::error));
 }
 
 void BulletModule::SpawnBullet(std::shared_ptr<Bullet> bullet)
 {
     bullets.push_back(bullet);
-    environment.container.Push(bullet);
+    environment.Physics().Push(bullet);
 }
 
 void BulletModule::Write(archive& a)
 {
+    a.write("table");
     a.write("bullets");
     a.write(this->bullets.size());
     a.write(6);
@@ -38,6 +40,9 @@ void BulletModule::Write(archive& a)
 
 void BulletModule::Update(const boost::system::error_code &)
 { 
+    archive a;
+    Write(a);
+    player->BroadCast(a);
     {   ///< Видалення закритих зєднанн
         auto it = remove_if(bullets.begin(),bullets.end(),[](const std::shared_ptr<Bullet> p){return !p->IsValid();});
         bullets.erase(it,bullets.end());

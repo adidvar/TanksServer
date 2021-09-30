@@ -1,20 +1,31 @@
 #ifndef MODULE_H
 #define MODULE_H
+
 #include <boost/asio.hpp>
-#include <functional>
 #include <vector>
 #include <memory>
+#include <queue>
 
 #include "container.h"
+#include "gamesignal.h"
 
 class Module;
 
-struct ModuleInterface
+class ModuleInterface
 {
-    ObjectInterface interface;
+private:
+
     boost::asio::io_service service;
+
+    ObjectInterface interface;
     Container container;
+
     std::vector<std::shared_ptr<Module>> modules;
+    std::queue<GameSignal> signals;
+public:
+    ModuleInterface() {};
+    
+    friend class Game;
 
     template<typename ModuleType>
     std::shared_ptr<ModuleType> FindModule()
@@ -26,28 +37,26 @@ struct ModuleInterface
         }
         return nullptr;
     };
-};
-//nclude <any>
 
-enum struct Sourse 
-{
-    System = 0,
-    Module = 1,
-    Object = 2
-};
+    void EmitSignal(GameSignal signal)
+    {
+        signals.push(signal);
+    }
 
+    Container& Physics()
+    {
+        return container;
+    }
 
-class GameSignal
-{
-   Sourse from;
-   std::any data;
-public:
-    GameSignal(Sourse from /*, std::any data*/) :
-        from(from),
-        data(data)
-    {};
-   Sourse From() { return from; }
-   std::any Data() { return data; }
+    boost::asio::io_service& Service()
+    {
+        return service;
+    }
+
+    ObjectInterface& ObjInterface()
+    {
+        return interface;
+    }
 };
 
 class Module

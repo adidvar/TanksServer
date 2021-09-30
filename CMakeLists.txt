@@ -7,15 +7,23 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-include_directories(.)
-include_directories(./SFML/include/)
-link_directories(./SFML/lib/)
+add_library(Core game.h game.cpp main.cpp)
+target_link_libraries(Core ${CONAN_LIBS})
 
-add_library(Core object.h debug_tools/collision_visualizer.h debug_tools/collision_visualizer.cpp net/player_controller.cpp net/player_controller.h math_tools/collision.cpp math_tools/collision.h math_tools/mvector.cpp math_tools/mvector.h math_tools/shapes.cpp math_tools/shapes.h objectinterface.cpp objectinterface.h module.cpp module.h bullet.cpp bullet.h bulletmodule.cpp bulletmodule.h container.cpp container.h game.cpp game.h tank.cpp tank.h map.cpp map.h playermodule.cpp playermodule.h)
-target_link_libraries(Core sfml-system sfml-window sfml-graphics)
+add_library(Module modules/module.h modules/module.cpp modules/gamesignal.h)
+
+add_library(Object objects/objectinterface.h objects/objectinterface.cpp objects/object.h)
+
+add_library(MathTools math/mvector.h math/mvector.cpp math/shapes.h math/shapes.cpp)
+
+add_library(Collisions collisions/collision.h collisions/collision.cpp collisions/collision_visualizer.h collisions/collision_visualizer.cpp collisions/container.h collisions/container.cpp)
+
+#target_link_libraries(Core sfml-system sfml-window sfml-graphics)
+#target_include_directories(Core PRIVATE ./SFML/include/)
+#target_link_directories(Core ./SFML/lib/)
 
 add_executable(Server main.cpp)
-target_link_libraries(Server Core)
+target_link_libraries(Server Core Module Object MathTools Collisions)
 
 
  

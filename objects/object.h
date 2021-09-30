@@ -7,8 +7,6 @@
 #include "math_tools/mvector.h"
 #include "objectinterface.h"
 
-class MultiPointShape;
-
 class Object
 {
 protected:

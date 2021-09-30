@@ -1,5 +1,6 @@
 #include "player_controller.h"
 #include "debug_tools/out.h"
+#include "archive.h"
 
 void player_controller::destroy()
 {
@@ -7,21 +8,10 @@ void player_controller::destroy()
     tank->Suicide();
 }
 
-player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> c, std::shared_ptr<Map> map):
+player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> c):
     channel(std::move(c)),
     tank( new  Tank(interface , "The Ivan Python coder" , 300) )
-{
-    archive a;
-    map->write(a);
-    std::string data = a.text();
-
-    boost::system::error_code code;
-    this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
-    if(code)
-    {
-        info("disconnected " + this->tank->name + code.message());
-        destroy();
-    }
+{ 
     this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
 }
 
@@ -33,6 +23,7 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
         tank->Spawn({ 0,0 }, rand());
 
     archive a;
+    a.write("table");
     a.write("v_tanks");
     a.write(visible_unit.size());
     a.write(8);
@@ -48,6 +39,7 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
         a.write(i->tower_angle);
     }
     a.packend();
+    a.write("table");
     a.write("main_tank");
     a.write(1);
     a.write(12);

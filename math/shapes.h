@@ -3,9 +3,10 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include "mvector.h"
 #include <vector>
 #include <iterator>
+
+#include "mvector.h"
 
 struct Line
 {

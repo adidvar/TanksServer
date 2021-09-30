@@ -2,7 +2,6 @@
 #define OBJECTINTERFACE_H
 
 #include <memory>
-#include <string>
 #include <functional>
 
 class Object;
@@ -12,7 +11,6 @@ class Game;
 class ObjectInterface
 {
     std::function<void(std::shared_ptr<Bullet>)> spawnbullet;
-
     friend class Game;
 public:
     ObjectInterface();

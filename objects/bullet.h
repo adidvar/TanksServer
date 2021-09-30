@@ -1,8 +1,6 @@
 #ifndef BULLET_H
 #define BULLET_H
 
-#include <memory>
-
 #include "math_tools/mvector.h"
 #include "object.h"
 

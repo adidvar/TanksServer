@@ -2,11 +2,9 @@
 #define TANK_H
 
 #include <string>
-#include <functional>
 #include <memory>
 
 #include "object.h"
-#include "bullet.h"
 #include "math_tools/mvector.h"
 
 class Tank : public Object

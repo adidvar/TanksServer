@@ -1,20 +1,20 @@
 #include "playermodule.h"
+#include "net/archive.h"
+#include "debug_tools/out.h"
 
 const unsigned delay = 10;
 
 PlayerModule::PlayerModule(ModuleInterface &interface):
     Module(interface),
-    update_timer(interface.service,boost::posix_time::millisec(delay)),
-    acceptor(interface.service, tcp::endpoint(tcp::v4(),33334))
+    update_timer(interface.Service(),boost::posix_time::millisec(delay)),
+    acceptor(interface.Service(), tcp::endpoint(tcp::v4(),33334))
 {
 }
 
 void PlayerModule::Start()
 {
-    map = environment.FindModule<Map>();
-    bullets = environment.FindModule<BulletModule>();
     update_timer.async_wait(boost::bind(&PlayerModule::Update,this,boost::asio::placeholders::error));
-    socket.reset(new tcp::socket(environment.service));
+    socket.reset(new tcp::socket(environment.Service()));
     acceptor.async_accept(*this->socket.get(),boost::bind(&PlayerModule::Accept,this ,boost::asio::placeholders::error));
 }
 
@@ -32,13 +32,9 @@ void PlayerModule::Update(const boost::system::error_code &)
             visible.push_back(i->GetTank());
         }
 
-        archive arch;
-        bullets->Write(arch);
-
         for(auto &i : this->players)
         {
             i->update(visible);
-            i->send(arch.text());
         }
     }
 
@@ -46,18 +42,26 @@ void PlayerModule::Update(const boost::system::error_code &)
     update_timer.async_wait(boost::bind(&PlayerModule::Update,this , boost::asio::placeholders::error));
 }
 
+void PlayerModule::BroadCast(archive &a)
+{
+    auto text = a.text();
+    for (auto& client : this->players)
+        if(client->is_valid())
+          client->send(text);
+}
+
 void PlayerModule::Accept(const boost::system::error_code & error)
 {
     if(!error)
     {
-            std::shared_ptr<player_controller> c(new player_controller(environment.interface,std::move(socket),map));
+            std::shared_ptr<player_controller> c(new player_controller(environment.ObjInterface(),std::move(socket)));
             this->players.push_back(c);
             c->GetTank()->Spawn({ 0,0 }, rand());
-            this->environment.container.Push(c->GetTank());
+            this->environment.Physics().Push(c->GetTank());
             info("New client");
 
 
-            socket.reset(new tcp::socket(environment.service));
+            socket.reset(new tcp::socket(environment.Service()));
             acceptor.async_accept(*this->socket.get(),boost::bind(&PlayerModule::Accept,this , boost::asio::placeholders::error));
     }
 }

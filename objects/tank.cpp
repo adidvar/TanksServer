@@ -1,8 +1,10 @@
 #include "tank.h"
+
+#include <cmath>
+
 #include "debug_tools/out.h"
 #include "map.h"
-
-#include <math.h>
+#include "bullet.h"
 
 const float move_speed = +0.02f;
 const float rotation_speed = 0.03f;
