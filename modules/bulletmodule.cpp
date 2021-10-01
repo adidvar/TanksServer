@@ -40,13 +40,15 @@ void BulletModule::Write(archive& a)
 
 void BulletModule::Update(const boost::system::error_code &)
 { 
-    archive a;
-    Write(a);
-    player->BroadCast(a);
     {   ///< Видалення закритих зєднанн
         auto it = remove_if(bullets.begin(),bullets.end(),[](const std::shared_ptr<Bullet> p){return !p->IsValid();});
         bullets.erase(it,bullets.end());
     }
+
+    archive a;
+    Write(a);
+    player->BroadCast(a.text());
+
     update_timer.expires_from_now(boost::posix_time::millisec(delay));
     update_timer.async_wait(boost::bind(&BulletModule::Update,this , boost::asio::placeholders::error));
 }

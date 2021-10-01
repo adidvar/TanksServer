@@ -6,6 +6,7 @@
 void player_controller::destroy()
 {
     valid = false;
+    channel->cancel();
     tank->Suicide();
 }
 
@@ -120,7 +121,9 @@ void player_controller::readyread(const boost::system::error_code &code , size_t
             }
 
         }
-
+        this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
+    }	
+    else {
+        destroy();
     }
-    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
 }

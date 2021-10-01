@@ -18,7 +18,7 @@ void PlayerModule::Start()
     acceptor.async_accept(*this->socket.get(),boost::bind(&PlayerModule::Accept,this ,boost::asio::placeholders::error));
 }
 
-void PlayerModule::Update(const boost::system::error_code &)
+void PlayerModule::Update(const boost::system::error_code &e)
 { 
     {   ///< Видалення закритих зєднаннь
         auto it = remove_if(players.begin(),players.end(),[](const std::shared_ptr<player_controller> p){return !p->is_valid();});
@@ -38,9 +38,8 @@ void PlayerModule::Update(const boost::system::error_code &)
     update_timer.async_wait(boost::bind(&PlayerModule::Update,this , boost::asio::placeholders::error));
 }
 
-void PlayerModule::BroadCast(archive &a)
+void PlayerModule::BroadCast(std::string text)
 {
-    auto text = a.text();
     for (auto& client : this->players)
         if(client->is_valid())
           client->send(text);
@@ -55,6 +54,8 @@ void PlayerModule::Accept(const boost::system::error_code & error)
             c->GetTank()->Spawn({ 0,0 }, rand());
             this->environment.Physics().Push(c->GetTank());
             info("New client");
+
+            this->environment.EmitSignal(GameSignal(c));
 
 
             socket.reset(new tcp::socket(environment.Service()));

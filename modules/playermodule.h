@@ -26,7 +26,7 @@ public:
     PlayerModule(ModuleInterface &interface);
 
     virtual void Start() override;
-    void BroadCast(archive &a);
+    void BroadCast(std::string text);
 private:
     void Update(const boost::system::error_code&);
     void Accept(const boost::system::error_code&error);

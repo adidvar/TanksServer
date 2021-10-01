@@ -1,5 +1,6 @@
 #include "map.h"
 #include "../debug_tools/out.h"
+#include "../net/player_controller.h"
 
 #include <fstream>
 
@@ -50,6 +51,18 @@ void Map::Start()
 {
     for( auto &x : this->walls)
         environment.Physics().Push(x);
+}
+
+void Map::Signal(GameSignal sign)
+{
+    std::shared_ptr<player_controller>* controller;
+    controller = std::any_cast<std::shared_ptr<player_controller>>(&sign);
+    if (controller != nullptr) 
+    {
+        archive a;
+        write(a);
+        (*controller)->send(a.text());
+    }
 }
 
 void Map::write(archive &a)

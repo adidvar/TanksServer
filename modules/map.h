@@ -27,6 +27,7 @@ public:
     Map(ModuleInterface &interface , std::string file);
 
     virtual void Start() override;
+    virtual void Signal(GameSignal sign) override;
     void write(archive &arc);
 };
 
