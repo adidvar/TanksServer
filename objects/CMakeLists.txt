@@ -8,7 +8,7 @@ file(GLOB Headers "*.h")
 
 file(GLOB Sources "*.cpp")
 
-add_library(Objects SHARED ${Headers} ${Sources})
+add_library(Objects ${Headers} ${Sources})
 target_link_libraries(Objects Core)
 target_include_directories(Objects INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 

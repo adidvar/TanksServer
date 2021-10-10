@@ -8,10 +8,11 @@ file(GLOB Headers "*.h")
 
 file(GLOB Sources "*.cpp")
 
-add_library(Core SHARED ${Headers} ${Sources})
+add_library(Core ${Headers} ${Sources})
 target_include_directories(Core INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 if(${Visual})
+set(SFML_STATIC_LIBRARIES ON)
 find_package(SFML 2.5.1 COMPONENTS system window graphics)
 if(${SFML_FOUND})
 add_definitions(-DSCREEN)	

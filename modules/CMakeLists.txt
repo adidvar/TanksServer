@@ -8,11 +8,16 @@ file(GLOB Headers "*.h")
 
 file(GLOB Sources "*.cpp")
 
+set(Boost_USE_STATIC_LIBS OFF) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost 1.76 REQUIRED) 
 
-add_library(Modules SHARED ${Headers} ${Sources})
+add_library(Modules ${Headers} ${Sources})
 target_include_directories(Modules INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} PUBLIC ${Boost_INCLUDE_DIRS})
+target_link_directories(Modules PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(Modules Objects ${Boost_LIBRARIES})
+
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL Windows)
 target_link_libraries(Modules ws2_32 wsock32)

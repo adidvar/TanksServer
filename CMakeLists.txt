@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option(Visual "compile graphics visualizer" ON)
 
-include(${CMAKE_CURRENT_SOURCE_DIR}/conan_paths.cmake)
+#include(${CMAKE_CURRENT_SOURCE_DIR}/conan_paths.cmake)
 
 add_subdirectory(Core)
 add_subdirectory(Objects)

@@ -10,8 +10,8 @@
 #include <thread>
 #include <mutex>
 
-#include "math_tools/mvector.h"
-#include "math_tools/shapes.h"
+#include "mvector.h"
+#include "shapes.h"
 
 class collision_visualizer
 {
