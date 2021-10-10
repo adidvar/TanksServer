@@ -1,5 +1,5 @@
 #include "bullet.h"
-#include "../modules/map.h"
+#include "collider.h"
 #include "tank.h"
 
 const float Bullet::speed = 0.1f;
@@ -21,7 +21,7 @@ void Bullet::Collision(class Object *object, Vector normal)
     if (this->IsValid() == false)
         return;
 
-    if (dynamic_cast<Decor*>(object) != nullptr)
+    if (dynamic_cast<Collider*>(object) != nullptr)
     {
         this->Suicide();
     }

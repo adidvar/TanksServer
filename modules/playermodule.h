@@ -7,10 +7,10 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
+#include <archive.h>
 
 #include "module.h"
-#include "../net/player_controller.h"
-#include "../net/archive.h"
+#include "player_controller.h"
 
 using boost::asio::ip::tcp;
 

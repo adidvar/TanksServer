@@ -1,6 +1,6 @@
 #include "map.h"
-#include "../debug_tools/out.h"
-#include "../net/player_controller.h"
+#include <out.h>
+#include "player_controller.h"
 
 #include <fstream>
 
@@ -13,38 +13,36 @@ Map::Map(ModuleInterface &interface, std::string url):
         error("cant open map.txt");
 
     info("Map loading...");
-
-    Decor current(interface.ObjInterface());
-    size_t back_c , walls_c;
-    file >> back_c;
-    for(size_t i = 0 ; i < back_c ; i++)
+ 
+    size_t collider_count;
+    file >> collider_count;
+    for(size_t i = 0 ; i < collider_count ; i++)
     {
-        file >> current.position.x >> current.position.y >> current.size.x >> current.size.y >> current.rotate >> current.texture;
-
-        if(!file)
+        PointShape shape;
+        size_t point_counter;
+        file >> point_counter;
+        for (size_t j = 0; j < point_counter; j++)
         {
-            error("MAP BACKGROUND ERROR");
+            float x, y;
+            file >> x >> y;
+            shape.points.push_back({ x,y });
+            file >> shape.convexity;
         }
+        walls.push_back(std::shared_ptr<Collider>(new Collider(environment.ObjectInterface() , shape)));
+        environment.Physics().Push(walls.back());
+    }
 
-        backgrounds.push_back(current);
-    }
-    file >> walls_c;
-    for(size_t i = 0 ; i < walls_c ; i++)
-    {
-        file >> current.position.x >> current.position.y >> current.size.x >> current.size.y >> current.rotate >> current.texture;
-        if(!file)
-        {
-            error("MAP FOREGROUND ERROR");
-        }
-        walls.push_back(std::shared_ptr<Decor>(new Decor(current)));
-    }
+    file.seekg(0, std::ios::end); 
+    size_t length = file.tellg();    
+    file.seekg(0, std::ios::beg);   
+    char * buffer = new char[length];   
+    file.read(buffer, length);  
+    maptext = std::string(buffer, buffer + length);
+    info(std::string("Length ") + to_string(length));
+
     file.close();
 
-    info(std::string("Background items ") + to_string(this->backgrounds.size()));
-    info(std::string("Foreground items ") + to_string(this->walls.size()));
-
-
-
+    info(std::string("Items ") + to_string(this->walls.size()));
 }
 
 void Map::Start()
@@ -60,51 +58,15 @@ void Map::Signal(GameSignal sign)
     if (controller != nullptr) 
     {
         archive a;
-        write(a);
+        a.write("Map");
+        a.write(maptext);
+        a.packend();
         (*controller)->send(a.text());
     }
 }
 
-void Map::write(archive &a)
-{
-    a.write("table");
-    a.write("map_background");
-    a.write(backgrounds.size());
-    a.write(6);
-    for(const auto &i : backgrounds)
-    {
-        a.write(i.position.x);
-        a.write(i.position.y);
-        a.write(i.size.x);
-        a.write(i.size.y);
-        a.write(i.rotate);
-        a.write(i.texture);
-    }
-    a.packend();
-    a.write("table");
-    a.write("map_walls");
-    a.write(walls.size());
-    a.write(6);
-    for(const auto &i : walls)
-    {
-        a.write(i->position.x);
-        a.write(i->position.y);
-        a.write(i->size.x);
-        a.write(i->size.y);
-        a.write(i->rotate);
-        a.write(i->texture);
-    }
-    a.packend();
-}
-
-Decor::Decor(ObjectInterface &interface):
+Collider::Collider(ObjectInterface &interface):
     Object(interface , {0,0} , {0,0} , 0 , false)
-{
-
-}
-
-Decor::Decor(ObjectInterface &interface, Vector position, Vector size, float rotation):
-    Object(interface , position , size , rotation , false)
 {
 
 }

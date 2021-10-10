@@ -4,25 +4,16 @@
 #include <string>
 #include <memory>
 
-#include "../net/archive.h"
-#include "../objects/object.h"
-#include "module.h"
+#include <archive.h>
+#include <collider.h>
 
-class Decor : public Object
-{
-protected:
-    std::string texture;
-    friend class Map;
-public:
-    Decor(ObjectInterface &);
-    Decor(ObjectInterface & ,Vector position , Vector size , float rotation);
-};
+#include "module.h"
 
 class Map : public Module
 {
 protected:
-    std::vector<std::shared_ptr<Decor>> walls;
-    std::vector<Decor> backgrounds;
+    std::string maptext;
+    std::vector<std::shared_ptr<Collider>> walls;
 public:
     Map(ModuleInterface &interface , std::string file);
 

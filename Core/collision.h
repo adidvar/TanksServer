@@ -1,8 +1,8 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
-#include "../math/shapes.h"
-#include "../objects/object.h"
+#include "shapes.h"
+#include "object.h"
 
 class Object;
 

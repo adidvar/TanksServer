@@ -1,9 +1,9 @@
 #include "game.h"
-#include "debug_tools/out.h"
+#include "out.h"
 
-#include "net/player_controller.h"
-#include "modules/map.h"
-#include "modules/bulletmodule.h"
+#include "player_controller.h"
+#include "map.h"
+#include "bulletmodule.h"
 
 const unsigned delay = 10;
 

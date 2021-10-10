@@ -1,5 +1,5 @@
 #include "collision.h"
-#include "math.h"
+#include <cmath>
 
 bool in_range(float m1 , float m2 , float value)
 {

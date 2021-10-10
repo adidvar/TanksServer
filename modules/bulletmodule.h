@@ -7,11 +7,11 @@
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
 
-#include "module.h"
-#include "../objects/bullet.h"
-#include "playermodule.h"
+#include <archive.h>
+#include <bullet.h>
 
-#include "../net/archive.h"
+#include "module.h"
+#include "playermodule.h"
 
 class BulletModule: public Module
 {

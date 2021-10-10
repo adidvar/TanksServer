@@ -1,6 +1,6 @@
 #ifndef MVECTOR_H
 #define MVECTOR_H
-#include "math.h"
+#include <cmath>
 
 struct Vector
 {

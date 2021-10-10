@@ -1,7 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "modules/module.h"
+#include "module.h"
 
 #include "boost/asio/io_service.hpp"
 #include "boost/asio/deadline_timer.hpp"

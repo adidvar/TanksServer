@@ -1,7 +1,7 @@
 #include "player_controller.h"
 
-#include "../debug_tools/out.h"
-#include "archive.h"
+#include <out.h>
+#include <archive.h>
 
 void player_controller::destroy()
 {

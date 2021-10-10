@@ -1,9 +1,9 @@
 #include "tank.h"
 
 #include <cmath>
+#include <out.h>
 
-#include "../debug_tools/out.h"
-#include "../modules/map.h"
+#include "collider.h"
 #include "bullet.h"
 
 const float move_speed = +0.02f;
@@ -40,7 +40,7 @@ void Tank::Fire()
 
 void Tank::Collision(Object *obj, Vector normal)
 {
-    if (dynamic_cast<Decor*>(obj) != nullptr)
+    if (dynamic_cast<Collider*>(obj) != nullptr)
     {
         info("Collision");
         position = position + normal * (move_speed);

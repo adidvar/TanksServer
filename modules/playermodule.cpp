@@ -1,6 +1,7 @@
 #include "playermodule.h"
-#include "../net/archive.h"
-#include "../debug_tools/out.h"
+
+#include <archive.h>
+#include <out.h>
 
 const unsigned delay = 10;
 
@@ -49,7 +50,7 @@ void PlayerModule::Accept(const boost::system::error_code & error)
 {
     if(!error)
     {
-            std::shared_ptr<player_controller> c(new player_controller(environment.ObjInterface(),std::move(socket)));
+            std::shared_ptr<player_controller> c(new player_controller(environment.ObjectInterface(),std::move(socket)));
             this->players.push_back(c);
             c->GetTank()->Spawn({ 0,0 }, rand());
             this->environment.Physics().Push(c->GetTank());

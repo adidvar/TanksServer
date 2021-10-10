@@ -3,9 +3,9 @@
 
 #include <string>
 #include <memory>
+#include <mvector.h>
 
 #include "object.h"
-#include "../math/mvector.h"
 
 class Tank : public Object
 {

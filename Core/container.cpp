@@ -1,9 +1,8 @@
 #include "container.h"
-
 #include <algorithm>
 
-#include "../debug_tools/out.h"
-#include "../collisions/collision.h"
+#include "out.h"
+#include "collision.h"
 
 Container::Container()
 {
@@ -23,7 +22,7 @@ void Container::Remove(std::shared_ptr<Object> obj)
 void Container::Update()
 {
 
-    auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.unique();});
+    auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.use_count()==1;});
     objects.erase(t,objects.end());
 
     sort(objects.rbegin(),objects.rend(),[](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() < o2->Active();});
