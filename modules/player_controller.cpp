@@ -3,24 +3,36 @@
 #include <out.h>
 #include <archive.h>
 
+player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> c):
+    channel(std::move(c)),
+    tank( new  Tank(interface , "The Ivan Python coder" , 300) ),
+    valid(true)
+{ 
+    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
+}
+
+player_controller::~player_controller()
+{
+    if(valid==true)
+    {
+        destroy();
+        channel->close();
+    }
+}
+
 void player_controller::destroy()
 {
     valid = false;
     channel->cancel();
     tank->Suicide();
-}
-
-player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> c):
-    channel(std::move(c)),
-    tank( new  Tank(interface , "The Ivan Python coder" , 300) )
-{ 
-    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
+    info("disconnect");
 }
 
 void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
 {
     if(valid == false)
         return;
+
     if (tank->IsLive() == false)
         tank->Spawn({ 0,0 }, rand());
 
@@ -64,18 +76,19 @@ void player_controller::update(std::vector<shared_ptr<Tank> > visible_unit)
     this->channel->send(boost::asio::buffer(data.c_str(),data.size()),0,code);
     if (code)
     {
-        info("disconnected " + this->tank->name);
         destroy();
     }
 }
 
 void player_controller::send(std::string data)
 {
+    if(valid==false)
+        return;
+
     boost::system::error_code code;
     this->channel->send(boost::asio::buffer(data.c_str(), data.size()), 0, code);
     if (code)
     {
-        info("disconnected " + this->tank->name);
         destroy();
     }
 }

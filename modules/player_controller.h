@@ -4,9 +4,9 @@
 #include <memory>
 
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
-#include "../objects/tank.h"
+#include <tank.h>
 
 using boost::asio::ip::tcp;
 
@@ -15,6 +15,7 @@ const size_t buffer_size = 1024;
 /**
  * @brief Клас який прив'язується до танка і проводити керування ним , в нашому випадку приймає і читає інформацію через канал
  */
+
 class player_controller
 {
     std::unique_ptr<tcp::socket> channel;
@@ -29,6 +30,9 @@ public:
      * @brief оновлення інформації
      * @param visible_unit юніти які попадають в обзор
      */
+    ~player_controller();
+
+
     void update(std::vector<std::shared_ptr<Tank>> visible_unit); ///< відправка нової інформації
     /**
      * @brief events обробка інформації яка приходить

@@ -5,7 +5,7 @@
 #include <memory>
 
 #include <boost/asio.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <archive.h>
 #include <bullet.h>
