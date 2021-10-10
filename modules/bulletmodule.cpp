@@ -22,6 +22,7 @@ void BulletModule::SpawnBullet(std::shared_ptr<Bullet> bullet)
 
 void BulletModule::Write(archive& a)
 {
+    /*
     a.write("table");
     a.write("bullets");
     a.write(this->bullets.size());
@@ -36,6 +37,7 @@ void BulletModule::Write(archive& a)
         a.write("bullet");  
     }
     a.packend();
+    */
 }
 
 void BulletModule::Update(const boost::system::error_code &)

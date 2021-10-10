@@ -12,7 +12,6 @@ class Tank : public Object
 protected:
     std::string name = "NoName";
     size_t team_id = 0;
-
     float tower_angle = 0.0;
 
     struct Controller
@@ -33,8 +32,8 @@ public:
     void Spawn(Vector position , size_t team_id);
     void SetMove(int move , int  rotation , int tower_rotation);
     void Fire();
-    size_t Team() { return team_id; };
-    bool IsLive() { return health > 0; };
+    size_t Team();;
+    bool IsLive();;
 
     virtual void Collision(Object *obj , Vector normal) override;
     virtual MultiPointShape Poligon() const override;

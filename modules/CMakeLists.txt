@@ -9,7 +9,7 @@ file(GLOB Headers "*.h")
 file(GLOB Sources "*.cpp")
 
 set(Boost_USE_STATIC_LIBS OFF) 
-set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_MULTITHREADED OFF)
 set(Boost_USE_STATIC_RUNTIME OFF) 
 find_package(Boost 1.76 REQUIRED) 
 

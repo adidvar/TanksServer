@@ -3,7 +3,7 @@
 #include <out.h>
 #include <archive.h>
 
-player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> c):
+player_controller::player_controller(ObjectInterface &interface , std::unique_ptr<tcp::socket> &&c):
     channel(std::move(c)),
     tank( new  Tank(interface , "The Ivan Python coder" , 300) ),
     valid(true)

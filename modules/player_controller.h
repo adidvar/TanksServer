@@ -25,7 +25,7 @@ class player_controller
 
     char buffer[buffer_size];
 public:
-    player_controller(ObjectInterface &interface, std::unique_ptr<tcp::socket>  );
+    player_controller(ObjectInterface &interface, std::unique_ptr<tcp::socket>&&);
     /**
      * @brief оновлення інформації
      * @param visible_unit юніти які попадають в обзор

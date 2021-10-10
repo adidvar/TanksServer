@@ -1,5 +1,6 @@
 #include "collision_visualizer.h"
 #include <algorithm>
+#include <SFML/Graphics.hpp>
 
 #ifdef SCREEN
 /// Швидкість маштабування колесиком миші
@@ -25,7 +26,6 @@ void load_scale_factor(float scale);
 
 void movement_event(sf::Event &e);
 
-
 struct epos
 {
     float x , y;
@@ -49,8 +49,6 @@ float scale_screen_base(float current_position)
 {
     return transform_p(current_position , eposition[1].y-eposition[0].y , height );
 };
-
-#include <iostream>
 
 void movement_event(sf::Event &e)
 {
@@ -94,14 +92,14 @@ void movement_event(sf::Event &e)
         move_mode = false;
 
     if(e.type == sf::Event::MouseMoved && move_mode)
-        {
-            eposition[0].x -= transform_p( (e.mouseMove.x - last_x ) , width , delta_x);
-            eposition[0].y -= transform_p( (e.mouseMove.y - last_y ) , height , delta_y);
-            eposition[1].x -= transform_p( (e.mouseMove.x - last_x ) , width , delta_x);
-            eposition[1].y -= transform_p( (e.mouseMove.y - last_y ) , height , delta_y);
-            last_x = e.mouseMove.x ;
-            last_y = e.mouseMove.y ;
-        }
+    {
+        eposition[0].x -= transform_p( (e.mouseMove.x - last_x ) , width , delta_x);
+        eposition[0].y -= transform_p( (e.mouseMove.y - last_y ) , height , delta_y);
+        eposition[1].x -= transform_p( (e.mouseMove.x - last_x ) , width , delta_x);
+        eposition[1].y -= transform_p( (e.mouseMove.y - last_y ) , height , delta_y);
+        last_x = e.mouseMove.x ;
+        last_y = e.mouseMove.y ;
+    }
 
     if(e.type == sf::Event::MouseMoved)
     {
@@ -119,12 +117,12 @@ void load_scale_factor(float  scale)
 
 float  get_real_x(unsigned screen_x)
 {
-   return eposition[0].x + (eposition[1].x - eposition[0].x)*((long double)screen_x / width);
+    return eposition[0].x + (eposition[1].x - eposition[0].x)*((long double)screen_x / width);
 }
 
 float  get_real_y(unsigned screen_y)
 {
-   return eposition[0].y + (eposition[1].y - eposition[0].y)*((long double)screen_y / height);
+    return eposition[0].y + (eposition[1].y - eposition[0].y)*((long double)screen_y / height);
 }
 
 float  scale_real(float  num)
@@ -132,15 +130,15 @@ float  scale_real(float  num)
     return (eposition[1].y - eposition[0].y)*((long double)num / height);
 }
 
-collision_visualizer::collision_visualizer()
+collision_visualizer::collision_visualizer():
+    th(&collision_visualizer::render,this)
 {
-    th = new  std::thread(&collision_visualizer::render,this);
-    th->detach();
+    th.detach();
 };
 
 void collision_visualizer::render()
 {
-    window = new sf::RenderWindow(sf::VideoMode(width,height),"visual");
+    auto window = new sf::RenderWindow(sf::VideoMode(width,height),"visual");
     window->setActive(true);
     window->setFramerateLimit(60);
     while (window->isOpen())
@@ -159,23 +157,25 @@ void collision_visualizer::render()
         normales.setPrimitiveType(sf::PrimitiveType::Lines);
         colis.setPrimitiveType(sf::PrimitiveType::Lines);
 
-        l_mutex.lock();
-
-        for(auto x : lines)
         {
-            array.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)}));
-            array.append(sf::Vertex({scale_screen_width(x.begin.x),scale_screen_height(x.begin.y)}));
+            std::lock_guard guard(l_mutex);
 
-            normales.append(sf::Vertex({scale_screen_width((x.begin.x + x.end.x)/2.0f  ),scale_screen_height((x.begin.y + x.end.y)/2.0f )}, sf::Color::Red));
-            normales.append(sf::Vertex({scale_screen_width((x.begin.x + x.end.x)/2.0f + x.normal.Nomalize().x/2.0f  ),scale_screen_height((x.begin.y + x.end.y)/2.0f + x.normal.Nomalize().y/2.0f )}, sf::Color::Red));
+            for(auto x : lines)
+            {
+                array.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)}));
+                array.append(sf::Vertex({scale_screen_width(x.begin.x),scale_screen_height(x.begin.y)}));
+
+                normales.append(sf::Vertex({scale_screen_width((x.begin.x + x.end.x)/2.0f  ),scale_screen_height((x.begin.y + x.end.y)/2.0f )}, sf::Color::Red));
+                normales.append(sf::Vertex({scale_screen_width((x.begin.x + x.end.x)/2.0f + x.normal.Nomalize().x/2.0f  ),scale_screen_height((x.begin.y + x.end.y)/2.0f + x.normal.Nomalize().y/2.0f )}, sf::Color::Red));
+
+            }
+            for(auto x : colisions)
+            {
+                colis.append(sf::Vertex({scale_screen_width(x.begin.x),scale_screen_height(x.begin.y)},sf::Color::Green));
+                colis.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)},sf::Color::Green));
+            }
 
         }
-        for(auto x : colisions)
-        {
-            colis.append(sf::Vertex({scale_screen_width(x.begin.x),scale_screen_height(x.begin.y)},sf::Color::Green));
-            colis.append(sf::Vertex({scale_screen_width(x.end.x),scale_screen_height(x.end.y)},sf::Color::Green));
-        }
-        l_mutex.unlock();
 
         window->clear();
 
@@ -185,31 +185,25 @@ void collision_visualizer::render()
 
         window->display();
     }
+    delete window;
 }
 
 void collision_visualizer::clear()
 {
+    std::lock_guard guard(l_mutex);
     lines.clear();
     colisions.clear();
 }
 
-void collision_visualizer::lock()
-{
-    l_mutex.lock();
-}
-
-void collision_visualizer::unlock()
-{
-    l_mutex.unlock();
-}
-
 void collision_visualizer::push(MultiPointShape lines)
 {
+    std::lock_guard guard(l_mutex);
     lines.ToLines(std::back_inserter(this->lines));
 }
 
 void collision_visualizer::pushCollision(MultiPointShape lines)
 {
+    std::lock_guard guard(l_mutex);
     lines.ToLines(std::back_inserter(this->colisions));
 }
 

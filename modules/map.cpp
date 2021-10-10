@@ -25,11 +25,11 @@ Map::Map(ModuleInterface &interface, std::string url):
         {
             float x, y;
             file >> x >> y;
-            shape.points.push_back({ x,y });
-            file >> shape.convexity;
+            shape.points.emplace_back( x,y );
         }
-        walls.push_back(std::shared_ptr<Collider>(new Collider(environment.ObjectInterface() , shape)));
-        environment.Physics().Push(walls.back());
+        file >> shape.convexity;
+        walls.emplace_back(new Collider(environment.ObjectInterface() , shape));
+        environment.Physics().Push( dynamic_pointer_cast<Object>(walls.back()));
     }
 
     file.seekg(0, std::ios::end); 
@@ -37,12 +37,14 @@ Map::Map(ModuleInterface &interface, std::string url):
     file.seekg(0, std::ios::beg);   
     char * buffer = new char[length];   
     file.read(buffer, length);  
-    maptext = std::string(buffer, buffer + length);
     info(std::string("Length ") + to_string(length));
+    maptext = std::string(buffer, length);
+    delete[] buffer;
 
     file.close();
 
     info(std::string("Items ") + to_string(this->walls.size()));
+    return ;
 }
 
 void Map::Start()
@@ -63,10 +65,4 @@ void Map::Signal(GameSignal sign)
         a.packend();
         (*controller)->send(a.text());
     }
-}
-
-Collider::Collider(ObjectInterface &interface):
-    Object(interface , {0,0} , {0,0} , 0 , false)
-{
-
 }

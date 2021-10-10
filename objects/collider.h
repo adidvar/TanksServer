@@ -9,19 +9,9 @@ protected:
     MultiPointShape shape;
     friend class Map;
 public:
-    Collider(ObjectInterface &);
-    Collider(ObjectInterface& obj, PointShape p):
-        Object(obj, { 0,0 }, { 0,0 } , 0 , false)
-    {
-        shape.shapes.emplace_back(std::move(p));
-    }
-    virtual void Collision(Object*, Vector) override
-    {
-    }
-    virtual MultiPointShape Poligon() const override
-    {
-        return shape;
-    }
+    Collider(ObjectInterface& obj, PointShape p);
+    virtual void Collision(Object*, Vector) override;
+    virtual MultiPointShape Poligon() const override;
 };
 
 #endif

@@ -1,10 +1,5 @@
 #include "object.h"
 
-void Object::Suicide()
-{
-    this->is_live = false;
-}
-
 Object::Object(ObjectInterface &interface, Vector position, Vector size, float rotate, bool active):
     interface(interface),
     position(position),
@@ -42,11 +37,6 @@ void Object::Update()
 
 }
 
-bool Object::IsValid()
-{
-    return this->is_live;
-}
-
 void Object::Collision(Object *obj, Vector normal)
 {
 
@@ -60,6 +50,16 @@ void Object::CollisionEnter(Object *obj, Vector normal)
 void Object::CollisionExit(Object *obj)
 {
 
+}
+
+void Object::Suicide()
+{
+    this->is_live = false;
+}
+
+bool Object::IsValid()
+{
+    return this->is_live;
 }
 
 bool Object::Active()

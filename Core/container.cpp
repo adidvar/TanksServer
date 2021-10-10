@@ -1,17 +1,19 @@
 #include "container.h"
-#include <algorithm>
 
 #include "out.h"
 #include "collision.h"
 
 Container::Container()
+#ifdef SCREEN
+    :
+    visual(new collision_visualizer)
+#endif
 {
-
 }
 
-void Container::Push(std::shared_ptr<Object> obj)
+void Container::Push(const std::shared_ptr<Object> &obj)
 {
-    objects.push_back(obj);
+    objects.emplace_back(obj);
 }
 
 void Container::Remove(std::shared_ptr<Object> obj)
@@ -21,11 +23,13 @@ void Container::Remove(std::shared_ptr<Object> obj)
 
 void Container::Update()
 {
+    if(objects.size() == 0)
+        return;
 
     auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.use_count()==1;});
     objects.erase(t,objects.end());
 
-    sort(objects.rbegin(),objects.rend(),[](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() < o2->Active();});
+    objects.sort([](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() < o2->Active();});
     auto active_end = objects.begin();
 
     while(active_end!= objects.end())
@@ -34,6 +38,7 @@ void Container::Update()
             break;
         ++active_end;
     }
+#undef SCREEN
 #ifdef SCREEN
     std::vector<MultiPointShape> col;
 #endif
@@ -53,17 +58,13 @@ void Container::Update()
 
 #ifdef SCREEN
         {
-            visual.lock();
-            visual.clear();
+            visual->clear();
             for(const auto &x : this->objects)
-                visual.push(x->Poligon());
+                visual->push(x->Poligon());
              for(const auto &x : col)
-                visual.pushCollision(x);
-            visual.unlock();
+                visual->pushCollision(x);
         }
 #endif
-
-
     for(const auto& x : objects)
         x->Update();
 }

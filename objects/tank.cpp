@@ -38,6 +38,16 @@ void Tank::Fire()
     interface.SpawnBullet( std::shared_ptr<Bullet>(bullet) );
 }
 
+size_t Tank::Team()
+{
+    return team_id;
+}
+
+bool Tank::IsLive()
+{
+    return health > 0;
+}
+
 void Tank::Collision(Object *obj, Vector normal)
 {
     if (dynamic_cast<Collider*>(obj) != nullptr)

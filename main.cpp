@@ -5,7 +5,8 @@ using namespace std;
 
 int main()
 {
-    Game g;
-    g.Run();
+    Game *g = new Game();
+    g->Run();
+    delete g;
     return 0;
 }

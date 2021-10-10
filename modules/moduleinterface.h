@@ -16,15 +16,13 @@ class Module;
 class ModuleInterface
 {
 private:
-    boost::asio::io_service service;
-
     ObjectInterface interface;
+    boost::asio::io_service service;
     Container container;
-
     std::vector<std::shared_ptr<Module>> modules;
     std::queue<GameSignal> signals;
 public:
-    ModuleInterface() {};
+    ModuleInterface() = default;
     
     friend class Game;
 

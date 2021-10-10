@@ -1,7 +1,7 @@
 #ifndef CONTAINER_H
 #define CONTAINER_H
 
-#include <vector>
+#include <list>
 #include <memory>
 
 #include "object.h"
@@ -11,12 +11,12 @@ class Container
 {
 
 #ifdef SCREEN
-    collision_visualizer visual;
+    collision_visualizer* visual;
 #endif
-    std::vector<std::shared_ptr<Object>> objects;
+    std::list<std::shared_ptr<Object>> objects;
 public:
     Container();
-    void Push(std::shared_ptr<Object> obj);
+    void Push(const std::shared_ptr<Object> &obj);
     void Remove(std::shared_ptr<Object> obj);
     void Update();
 };

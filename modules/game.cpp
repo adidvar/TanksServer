@@ -11,12 +11,9 @@ Game::Game():
     update_timer(interface.Service(),boost::posix_time::millisec(delay))
 {
     interface.modules.emplace_back(new PlayerModule(interface));
-    interface.modules.emplace_back(new Map(interface,"map.txt"));
+    //interface.modules.emplace_back(new Map(interface,"map.txt"));
+    //interface.modules.emplace_back(new BulletModule(interface));
 
-    auto bulletc = new BulletModule(interface);
-    this->interface.interface.spawnbullet = std::bind(&BulletModule::SpawnBullet, bulletc , std::placeholders::_1);
-    interface.modules.emplace_back(bulletc);
-   
     for(auto &x : interface.modules)
         x->Start();
     update_timer.async_wait(boost::bind(&Game::Update,this,boost::asio::placeholders::error));
