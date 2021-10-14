@@ -11,9 +11,9 @@ Container::Container()
 {
 }
 
-void Container::Push(const std::shared_ptr<Object> &obj)
+void Container::Push(std::shared_ptr<Object> object)
 {
-    objects.emplace_back(obj);
+    objects.push_back(object);
 }
 
 void Container::Remove(std::shared_ptr<Object> obj)
@@ -38,7 +38,6 @@ void Container::Update()
             break;
         ++active_end;
     }
-#undef SCREEN
 #ifdef SCREEN
     std::vector<MultiPointShape> col;
 #endif

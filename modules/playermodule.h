@@ -7,7 +7,6 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind/bind.hpp>
-#include <archive.h>
 
 #include "module.h"
 #include "player_controller.h"
@@ -20,16 +19,16 @@ class PlayerModule : public Module
 
     boost::asio::deadline_timer update_timer;
     boost::asio::ip::tcp::acceptor acceptor;
-    std::unique_ptr<tcp::socket> socket;
-
 public:
     PlayerModule(ModuleInterface &interface);
+    ~PlayerModule();
 
     virtual void Start() override;
     void BroadCast(std::string text);
 private:
+    boost::json::object GenerateJson(const std::shared_ptr<player_controller>&current_user);
     void Update(const boost::system::error_code&);
-    void Accept(const boost::system::error_code&error);
+    void Accept(tcp::socket* socket ,const boost::system::error_code&error);
 };
 
 #endif // PLAYERMODULE_H

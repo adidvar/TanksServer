@@ -5,8 +5,8 @@ using namespace std;
 
 int main()
 {
-    Game *g = new Game();
-    g->Run();
-    delete g;
+    boost::asio::io_service service;
+    Game game(service);
+    game.Run();
     return 0;
 }

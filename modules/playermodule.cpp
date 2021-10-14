@@ -1,6 +1,5 @@
 #include "playermodule.h"
 
-#include <archive.h>
 #include <out.h>
 
 const unsigned delay = 10;
@@ -12,27 +11,34 @@ PlayerModule::PlayerModule(ModuleInterface &interface):
 {
 }
 
-void PlayerModule::Start()
+PlayerModule::~PlayerModule()
 {
-    update_timer.async_wait(boost::bind(&PlayerModule::Update,this,boost::asio::placeholders::error));
-    socket.reset(new tcp::socket(environment.Service()));
-    acceptor.async_accept(*this->socket.get(),boost::bind(&PlayerModule::Accept,this ,boost::asio::placeholders::error));
+    this->acceptor.cancel();
 }
 
-void PlayerModule::Update(const boost::system::error_code &e)
+void PlayerModule::Start()
+{
+    tcp::socket *sock = new tcp::socket(environment.Service());
+    acceptor.async_accept(*sock,boost::bind(&PlayerModule::Accept,this , sock ,boost::asio::placeholders::error));
+    update_timer.async_wait(boost::bind(&PlayerModule::Update,this,boost::asio::placeholders::error));
+}
+
+void PlayerModule::Update(const boost::system::error_code &error)
 { 
+    if(error){
+        warning(error.message());
+        return;
+    }
+
     {   ///< Видалення закритих зєднаннь
         auto it = remove_if(players.begin(),players.end(),[](const std::shared_ptr<player_controller> p){return !p->is_valid();});
         players.erase(it,players.end());
     }
 
-    {  ///< Цикл відправлення таблиць
-        std::vector<std::shared_ptr<Tank>> visible;
-        for(const auto &i : this->players)
-            visible.push_back(i->GetTank());
-
-        for(auto &i : this->players)
-            i->update(visible);
+    for(const auto& user : this->players){
+        auto package = boost::json::serialize(GenerateJson(user));
+        package.push_back('\n');
+        user->send(package);
     }
 
     update_timer.expires_from_now(boost::posix_time::millisec(delay));
@@ -43,23 +49,36 @@ void PlayerModule::BroadCast(std::string text)
 {
     for (auto& client : this->players)
         if(client->is_valid())
-          client->send(text);
+            client->send(text);
 }
 
-void PlayerModule::Accept(const boost::system::error_code & error)
+boost::json::object PlayerModule::GenerateJson(const std::shared_ptr<player_controller> &current_user)
 {
-    if(!error)
-    {
-            std::shared_ptr<player_controller> c(new player_controller(environment.ObjectInterface(),std::move(socket)));
-            this->players.push_back(c);
-            c->GetTank()->Spawn({ 0,0 }, rand());
-            this->environment.Physics().Push(c->GetTank());
-            info("New client");
+    boost::json::object root;
+    boost::json::array users;
+    for(const auto &user : this->players)
+        users.push_back(user->GetPlayerJson());
+    root["type"] = "users";
+    root["users"] = users;
+    root["me"] = current_user->GetPlayerJson();
+    return root;
+}
 
-            this->environment.EmitSignal(GameSignal(c));
-
-
-            socket.reset(new tcp::socket(environment.Service()));
-            acceptor.async_accept(*this->socket.get(),boost::bind(&PlayerModule::Accept,this , boost::asio::placeholders::error));
+void PlayerModule::Accept(tcp::socket* socket, const boost::system::error_code & error)
+{
+    if(error){
+        warning(error.message());
+        delete socket;
+        return;
     }
+
+    std::shared_ptr<player_controller> c(new player_controller(environment.ObjectInterface(), socket));
+    this->players.push_back(c);
+    c->GetTank()->Spawn({ 0,0 }, rand());
+    this->environment.Physics().Push(c->GetTank());
+    //this->environment.EmitSignal(GameSignal(c));
+    info("New client");
+
+    tcp::socket *new_sock = new tcp::socket(environment.Service());
+    acceptor.async_accept( *new_sock , boost::bind(&PlayerModule::Accept,this, new_sock , boost::asio::placeholders::error));
 }

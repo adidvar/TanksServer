@@ -32,8 +32,8 @@ public:
     void Spawn(Vector position , size_t team_id);
     void SetMove(int move , int  rotation , int tower_rotation);
     void Fire();
-    size_t Team();;
-    bool IsLive();;
+    size_t Team();
+    bool IsLive();
 
     virtual void Collision(Object *obj , Vector normal) override;
     virtual MultiPointShape Poligon() const override;

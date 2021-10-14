@@ -10,7 +10,6 @@ BulletModule::BulletModule(ModuleInterface &interface):
 
 void BulletModule::Start()
 {
-    player = environment.FindModule<PlayerModule>();
     update_timer.async_wait(boost::bind(&BulletModule::Update,this,boost::asio::placeholders::error));
 }
 
@@ -20,24 +19,27 @@ void BulletModule::SpawnBullet(std::shared_ptr<Bullet> bullet)
     environment.Physics().Push(bullet);
 }
 
-void BulletModule::Write(archive& a)
+boost::json::object BulletModule::GenerateBulletJson(const std::shared_ptr<Bullet> &bullet)
 {
-    /*
-    a.write("table");
-    a.write("bullets");
-    a.write(this->bullets.size());
-    a.write(6);
-    for(const auto &i : this->bullets)
-    {
-        a.write(i->position.x);
-        a.write(i->position.y);
-        a.write(i->size.x);
-        a.write(i->size.y);
-        a.write(i->rotate);
-        a.write("bullet");  
-    }
-    a.packend();
-    */
+    boost::json::object bulletjson;
+    bulletjson["x"] = bullet->position.x;
+    bulletjson["y"] = bullet->position.y;
+    bulletjson["size_x"] = bullet->size.x;
+    bulletjson["size_y"] = bullet->size.y;
+    bulletjson["rotate"] = bullet->rotate;
+    bulletjson["team_id"] = bullet->friend_id;
+    return bulletjson;
+}
+
+boost::json::object BulletModule::GenerateJson()
+{
+    boost::json::object root;
+    boost::json::array bullets;
+    for(const auto& bullet : bullets)
+        bullets.push_back(bullet);
+    root["type"] = "bullets";
+    root["users"] = bullets;
+    return root;
 }
 
 void BulletModule::Update(const boost::system::error_code &)
@@ -47,9 +49,7 @@ void BulletModule::Update(const boost::system::error_code &)
         bullets.erase(it,bullets.end());
     }
 
-    archive a;
-    Write(a);
-    player->BroadCast(a.text());
+    auto package = boost::json::serialize(GenerateJson());
 
     update_timer.expires_from_now(boost::posix_time::millisec(delay));
     update_timer.async_wait(boost::bind(&BulletModule::Update,this , boost::asio::placeholders::error));

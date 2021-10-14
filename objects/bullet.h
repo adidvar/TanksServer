@@ -11,6 +11,7 @@ class Bullet: public Object
     size_t friend_id;
 public:
     Bullet(ObjectInterface & interface, Vector position , size_t friend_id , float angle, unsigned damage);
+    friend class BulletModule;
 
     void Update();
 

@@ -4,7 +4,6 @@
 #include <string>
 #include <memory>
 
-#include <archive.h>
 #include <collider.h>
 
 #include "module.h"
@@ -18,8 +17,8 @@ public:
     Map(ModuleInterface &interface , std::string file);
 
     virtual void Start() override;
-    virtual void Signal(GameSignal sign) override;
-    void write(archive &arc);
+//    virtual void Signal(GameSignal sign) override;
+//    void write(archive &arc);
 };
 
 #endif // MAP_H

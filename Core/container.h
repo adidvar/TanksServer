@@ -16,7 +16,7 @@ class Container
     std::list<std::shared_ptr<Object>> objects;
 public:
     Container();
-    void Push(const std::shared_ptr<Object> &obj);
+    void Push(std::shared_ptr<Object> object);
     void Remove(std::shared_ptr<Object> obj);
     void Update();
 };

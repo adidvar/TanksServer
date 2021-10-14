@@ -1,31 +1,28 @@
 #ifndef MODULE_INTERFACE
 #define MODULE_INTERFACE
 
+#include <any>
+#include <functional>
+
 #include <boost/asio.hpp>
 
 #include "container.h"
 #include "objectinterface.h"
-#include <gamesignal.h>
-
-#include <vector>
-#include <memory>
-#include <queue>
-
-class Module;
 
 class ModuleInterface
 {
 private:
     ObjectInterface interface;
-    boost::asio::io_service service;
     Container container;
-    std::vector<std::shared_ptr<Module>> modules;
-    std::queue<GameSignal> signals;
+
+    boost::asio::io_service &service;
+
+    std::function<void(std::any)> sendevent;
 public:
-    ModuleInterface() = default;
-    
+    ModuleInterface(boost::asio::io_service &serv , std::function<void(std::any)> sendevent);
     friend class Game;
 
+    /*
     template<typename ModuleType>
     std::shared_ptr<ModuleType> FindModule()
     {
@@ -36,26 +33,12 @@ public:
         }
         return nullptr;
     };
+    */
+    void SendEvent(std::any event);
 
-    void EmitSignal(GameSignal signal)
-    {
-        signals.push(signal);
-    }
-
-    ObjectInterface& ObjectInterface()
-    {
-        return interface;
-    }
-
-    Container& Physics()
-    {
-        return container;
-    }
-
-    boost::asio::io_service& Service()
-    {
-        return service;
-    }
+    ObjectInterface& ObjectInterface();
+    Container& Physics();
+    boost::asio::io_service& Service();
 };
 
 #endif

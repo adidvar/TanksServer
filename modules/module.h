@@ -1,8 +1,9 @@
 #ifndef MODULE_H
 #define MODULE_H
 
+#include <any>
+
 #include "moduleinterface.h"
-#include "gamesignal.h"
 
 class Module
 {
@@ -11,7 +12,7 @@ protected:
 public:
     Module(ModuleInterface &init);
     virtual void Start() = 0;
-    virtual void Signal(GameSignal sign) {};
+    virtual void Event(std::any& event) {};
 };
 
 

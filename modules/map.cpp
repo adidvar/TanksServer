@@ -52,7 +52,7 @@ void Map::Start()
     for( auto &x : this->walls)
         environment.Physics().Push(x);
 }
-
+/*
 void Map::Signal(GameSignal sign)
 {
     std::shared_ptr<player_controller>* controller;
@@ -66,3 +66,4 @@ void Map::Signal(GameSignal sign)
         (*controller)->send(a.text());
     }
 }
+*/
