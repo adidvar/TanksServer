@@ -76,9 +76,18 @@ void PlayerModule::Accept(tcp::socket* socket, const boost::system::error_code &
     this->players.push_back(c);
     c->GetTank()->Spawn({ 0,0 }, rand());
     this->environment.Physics().Push(c->GetTank());
-    //this->environment.EmitSignal(GameSignal(c));
+    this->environment.SendEvent(c);
     info("New client");
 
     tcp::socket *new_sock = new tcp::socket(environment.Service());
     acceptor.async_accept( *new_sock , boost::bind(&PlayerModule::Accept,this, new_sock , boost::asio::placeholders::error));
+}
+
+void PlayerModule::Event(std::any &event)
+{
+    std::string *broadcast = std::any_cast<std::string>(&event);
+    if( broadcast != nullptr )
+    {
+        BroadCast(*broadcast);
+    }
 }

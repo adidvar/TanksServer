@@ -35,10 +35,10 @@ boost::json::object BulletModule::GenerateJson()
 {
     boost::json::object root;
     boost::json::array bullets;
-    for(const auto& bullet : bullets)
-        bullets.push_back(bullet);
+    for(const auto& bullet : this->bullets)
+        bullets.push_back(GenerateBulletJson(bullet));
     root["type"] = "bullets";
-    root["users"] = bullets;
+    root["bullets"] = bullets;
     return root;
 }
 
@@ -49,7 +49,8 @@ void BulletModule::Update(const boost::system::error_code &)
         bullets.erase(it,bullets.end());
     }
 
-    auto package = boost::json::serialize(GenerateJson());
+    std::string package = boost::json::serialize(GenerateJson()) + '\n';
+    environment.SendEvent(package);
 
     update_timer.expires_from_now(boost::posix_time::millisec(delay));
     update_timer.async_wait(boost::bind(&BulletModule::Update,this , boost::asio::placeholders::error));

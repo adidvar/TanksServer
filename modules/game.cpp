@@ -13,7 +13,9 @@ Game::Game(boost::asio::io_service &serv):
 {
     modules.emplace_back(new PlayerModule(interface));
     //interface.modules.emplace_back(new Map(interface,"map.txt"));
-    //interface.modules.emplace_back(new BulletModule(interface));
+    modules.emplace_back(new BulletModule(interface));
+
+    interface.interface.spawnbullet = std::bind(&BulletModule::SpawnBullet , dynamic_cast<BulletModule*>(modules.back().get()) , std::placeholders::_1);
 
     for(auto &x : modules)
         x->Start();
@@ -27,15 +29,15 @@ void Game::Update(const boost::system::error_code &error)
         warning(error.message());
         return;
     }
-/*
+
     while(!events.empty())
     {
-        std::any &event = events.front();
+        std::any event = events.front();
         events.pop();
         for (auto& module : modules)
             module->Event(event);
     }
-*/
+
     interface.container.Update();
 
     update_timer.expires_from_now(boost::posix_time::millisec(delay));
@@ -44,7 +46,7 @@ void Game::Update(const boost::system::error_code &error)
 
 void Game::Event(std::any event)
 {
-  //  this->events.push(event);
+    this->events.push(event);
 }
 
 

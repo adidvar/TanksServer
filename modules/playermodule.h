@@ -29,6 +29,8 @@ private:
     boost::json::object GenerateJson(const std::shared_ptr<player_controller>&current_user);
     void Update(const boost::system::error_code&);
     void Accept(tcp::socket* socket ,const boost::system::error_code&error);
+
+    virtual void Event(std::any &event) override;
 };
 
 #endif // PLAYERMODULE_H

@@ -1,8 +1,10 @@
 #include "collision_visualizer.h"
+
+#ifdef SCREEN
+
 #include <algorithm>
 #include <SFML/Graphics.hpp>
 
-#ifdef SCREEN
 /// Швидкість маштабування колесиком миші
 #define SCALE_SPEED 0.1
 

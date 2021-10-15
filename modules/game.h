@@ -17,7 +17,7 @@ class Game
     ModuleInterface interface;
     boost::asio::deadline_timer update_timer;
     std::vector<std::shared_ptr<Module>> modules;
-   // std::queue<std::any> events;
+    std::queue<std::any> events;
 private:
     void Update(const boost::system::error_code &);
     void Event(std::any event);
