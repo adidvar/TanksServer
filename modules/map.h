@@ -17,8 +17,7 @@ public:
     Map(ModuleInterface &interface , std::string file);
 
     virtual void Start() override;
-//    virtual void Signal(GameSignal sign) override;
-//    void write(archive &arc);
+    virtual void Event(std::any &sign) override;
 };
 
 #endif // MAP_H

@@ -84,9 +84,6 @@ float ColisionMaxDistance() const
 
 bool ExecuteCollision(Object *obj1, Object *obj2)
 {
-    if(obj1->Radius() + obj2->Radius() <= (obj1->position - obj2->position).Module() )
-        return false;
-
     std::vector<Line> lines1;
     std::vector<Line> lines2;
     {

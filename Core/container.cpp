@@ -29,7 +29,7 @@ void Container::Update()
     auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.use_count()==1;});
     objects.erase(t,objects.end());
 
-    objects.sort([](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() < o2->Active();});
+    objects.sort([](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() > o2->Active();});
     auto active_end = objects.begin();
 
     while(active_end!= objects.end())
