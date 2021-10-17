@@ -9,7 +9,7 @@ player_controller::player_controller(ObjectInterface &interface , tcp::socket *s
     tank( new  Tank(interface , "The Ivan Python coder" , 300) ),
     valid(true)
 { 
-    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
+    this->channel->async_read_some(boost::asio::buffer(read_buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
 }
 
 player_controller::~player_controller()
@@ -71,39 +71,38 @@ void player_controller::readyread(const boost::system::error_code &code , size_t
         return;
     }
 
-    std::stringstream s;
-    s.write(buffer,bytes_transfered);
+    this->input_buffer.append(read_buffer,bytes_transfered);
 
-    while(s)
+    auto pack_end = std::find(input_buffer.begin(),input_buffer.end(),'\n');
+    if(pack_end == input_buffer.end())
+        return;
+
+    std::string json(input_buffer.begin(),pack_end);
+    input_buffer.erase(input_buffer.begin(),pack_end+1);
+
+    auto root = boost::json::parse(json);
+    auto root_obj = root.as_object();
+
+    auto type = root_obj["type"].as_string();
+    if(type == "speed")
     {
-        string name;
-        unsigned count , len;
-        s >> name >> count >> len;
-
-        if(name == "speed" && count == 1 && len == 3)
-        {
-            int move , rotate , tower_rotate;
-            s >> move >> rotate >> tower_rotate;
+            int move = root_obj["move_direction"].as_int64() ,
+                    rotate = root_obj["rotate_direction"].as_int64() ,
+                    tower_rotate = root_obj["tower_direction"].as_int64();
             tank->SetMove(move,rotate,tower_rotate);
-        }
-        else if(name == "name" && count == 1 && len == 1)
-        {
-
-            std::string name;
-            s >> name;
+    }else if(type == "name")
+    {
+           std::string name = root_obj["name"].as_string().c_str();
             debug("set name " + name);
             tank->name = name;
-        } else if (name == "fire" && count == 1 && len == 1)
-        {
-            debug("fire");
-            tank->Fire();
-        }
-        else if (name == "")
-        {} else
-        {
-            warning("unsupported package command" + name);
-        }
 
+    } else if(type =="fire")
+    {
+           debug("fire");
+            tank->Fire();
+    } else {
+        warning(std::string("unsupported package command ") + type.c_str());
     }
-    this->channel->async_read_some(boost::asio::buffer(buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
+
+    this->channel->async_read_some(boost::asio::buffer(read_buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
 }

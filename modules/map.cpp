@@ -37,6 +37,7 @@ Map::Map(ModuleInterface &interface, std::string url):
             auto pos = p.as_array();
             shape.points.emplace_back(Vector{static_cast<float>(pos[0].as_double()),static_cast<float>(pos[1].as_double())});
         }
+        shape.convexity = col.as_object()["convexity"].as_bool();
         this->walls.emplace_back(new Collider(environment.ObjectInterface(),shape));
     }
 

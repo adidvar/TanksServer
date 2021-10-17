@@ -19,9 +19,11 @@ class player_controller
     std::unique_ptr<tcp::socket> channel;
     std::shared_ptr<Tank> tank;
     bool valid = true;
-    void destroy();
-    char buffer[buffer_size];
 
+    std::string input_buffer;
+    char read_buffer[buffer_size];
+
+    void destroy();
     void readyread(const boost::system::error_code &code , size_t bytes_transfered); ///< обробка того що прийшло від клієнта
 public:
     player_controller(ObjectInterface &interface, tcp::socket*);
