@@ -80,8 +80,8 @@ void player_controller::readyread(const boost::system::error_code &code , size_t
     std::string json(input_buffer.begin(),pack_end);
     input_buffer.erase(input_buffer.begin(),pack_end+1);
 
-    auto root = boost::json::parse(json);
-    auto root_obj = root.as_object();
+    boost::json::value root = boost::json::parse(json);
+    boost::json::object root_obj = root.as_object();
 
     auto type = root_obj["type"].as_string();
     if(type == "speed")
