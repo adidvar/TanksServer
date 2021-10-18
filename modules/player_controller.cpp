@@ -43,6 +43,14 @@ boost::json::object player_controller::GetPlayerJson() const
     tankjson["live"] = tank->IsLive();
     tankjson["health"] = tank->health;
     tankjson["health_max"] = tank->health_max;
+    boost::json::object prediction_obj;
+    prediction_obj["move_speed"] = Tank::move_speed;
+    prediction_obj["rotate_speed"] = Tank::rotation_speed;
+    prediction_obj["tower_speed"] = Tank::tower_speed;
+    prediction_obj["move_direction"] = tank->controller.position_direction;
+    prediction_obj["rotate_direction"] = tank->controller.angle_direction;
+    prediction_obj["tower_direction"] = tank->controller.tower_angle_direction;
+    tankjson["prediction"] = prediction_obj;
     return tankjson;
 }
 

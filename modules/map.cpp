@@ -12,7 +12,7 @@ Map::Map(ModuleInterface &interface, std::string url):
     std::fstream file;
     file.open(url);
     if(file.is_open()==false)
-        error("cant open map.txt");
+        error("Cant open map.json");
 
     info("Map loading...");
 
@@ -40,13 +40,17 @@ Map::Map(ModuleInterface &interface, std::string url):
         shape.convexity = col.as_object()["convexity"].as_bool();
         this->walls.emplace_back(new Collider(environment.ObjectInterface(),shape));
     }
+    info(std::string("Items ") + to_string(this->walls.size()));
 
-
-
+    auto spawn_points = root_obj["spawn points"].as_array();
+    for(auto p : spawn_points){
+        auto p_obj = p.as_object();
+        this->spawn_points.push_back({p_obj["x"].as_double() , p_obj["y"].as_double() , p_obj["team"].as_int64()});
+    }
+    info(std::string("Spawns ")+to_string(spawn_points.size()));
 
     file.close();
 
-    info(std::string("Items ") + to_string(this->walls.size()));
     return ;
 }
 
@@ -54,6 +58,7 @@ void Map::Start()
 {
     for( auto &x : this->walls)
         environment.Physics().Push(x);
+    this->environment.SendEvent(MapUpdateEvent{this});
 }
 
 void Map::Event(std::any &sign)
@@ -64,4 +69,9 @@ void Map::Event(std::any &sign)
     {
         (*controller)->send(this->maptext);
     }
+}
+
+const std::vector<std::tuple<float, float, int> > &Map::GetSpawns()
+{
+    return this->spawn_points;
 }

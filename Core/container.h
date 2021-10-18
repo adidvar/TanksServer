@@ -3,6 +3,7 @@
 
 #include <list>
 #include <memory>
+#include <chrono>
 
 #include "object.h"
 #include "collision_visualizer.h"

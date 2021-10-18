@@ -24,6 +24,10 @@ protected:
     int health = 300;
     int health_max = 300;
 
+    static float move_speed;
+    static float rotation_speed;
+    static float tower_speed;
+
 public:
     Tank(ObjectInterface & interface , std::string name, int health_max);
 

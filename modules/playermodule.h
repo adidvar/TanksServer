@@ -16,6 +16,7 @@ using boost::asio::ip::tcp;
 class PlayerModule : public Module
 {
     std::vector<std::shared_ptr<player_controller>> players; ///< контролери
+    std::vector<std::tuple<float,float,int>> spawns;
 
     boost::asio::deadline_timer update_timer;
     boost::asio::ip::tcp::acceptor acceptor;

@@ -2,10 +2,10 @@
 #include "collider.h"
 #include "tank.h"
 
-const float Bullet::speed = 0.1f;
+const float Bullet::speed = 0.3f;
 
 Bullet::Bullet(ObjectInterface &interface, Vector position , size_t friend_id , float angle, unsigned damage):
-    Object(interface , position , {0.5f , 0.5f} , angle , true),
+    Object(interface , position , {0.12f , 0.45f} , angle , true),
     damage(damage),
     friend_id(friend_id)
 {

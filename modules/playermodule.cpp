@@ -1,4 +1,5 @@
 #include "playermodule.h"
+#include "map.h"
 
 #include <out.h>
 
@@ -34,7 +35,15 @@ void PlayerModule::Update(const boost::system::error_code &error)
         auto it = remove_if(players.begin(),players.end(),[](const std::shared_ptr<player_controller> p){return !p->is_valid();});
         players.erase(it,players.end());
     }
+    for(auto& user : this->players){
+        auto tank = user->GetTank();
+        if(tank->IsLive() == false)
+        {
+            auto[x , y , team] = spawns.at(rand()%spawns.size());
+            tank->Spawn({x,y},tank->Team());
+        }
 
+    }
     for(const auto& user : this->players){
         auto package = boost::json::serialize(GenerateJson(user));
         package.push_back('\n');
@@ -74,7 +83,10 @@ void PlayerModule::Accept(tcp::socket* socket, const boost::system::error_code &
 
     std::shared_ptr<player_controller> c(new player_controller(environment.ObjectInterface(), socket));
     this->players.push_back(c);
-    c->GetTank()->Spawn({ 0,0 }, rand());
+
+    auto[x , y , team] = spawns.at(rand()%spawns.size());
+
+    c->GetTank()->Spawn({ x,y }, rand());
     this->environment.Physics().Push(c->GetTank());
     this->environment.SendEvent(c);
     info("New client");
@@ -90,4 +102,9 @@ void PlayerModule::Event(std::any &event)
     {
         BroadCast(*broadcast);
     }
+    MapUpdateEvent *map_update = std::any_cast<MapUpdateEvent>(&event);
+    if( map_update != nullptr){
+        this->spawns = map_update->map->GetSpawns();
+    }
+
 }

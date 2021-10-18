@@ -30,6 +30,10 @@ void Game::Update(const boost::system::error_code &error)
         return;
     }
 
+    static auto timer = std::chrono::steady_clock::now();
+    auto dur = std::chrono::steady_clock::now() - timer;
+    timer = std::chrono::steady_clock::now();
+
     while(!events.empty())
     {
         std::any event = events.front();
@@ -40,7 +44,9 @@ void Game::Update(const boost::system::error_code &error)
 
     interface.container.Update();
 
-    update_timer.expires_from_now(boost::posix_time::millisec(delay));
+    cout << std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() << endl;
+
+    update_timer.expires_from_now(boost::posix_time::milliseconds(2));
     update_timer.async_wait(boost::bind(&Game::Update,this,boost::asio::placeholders::error));
 }
 
