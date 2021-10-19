@@ -18,7 +18,6 @@ target_include_directories(Modules INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} PUBLIC 
 target_link_directories(Modules PUBLIC ${Boost_LIBRARY_DIRS})
 target_link_libraries(Modules Objects ${Boost_LIBRARIES})
 
-
 if(${CMAKE_SYSTEM_NAME} STREQUAL Windows)
 target_link_libraries(Modules ws2_32 wsock32)
 endif()

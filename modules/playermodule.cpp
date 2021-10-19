@@ -3,11 +3,11 @@
 
 #include <out.h>
 
-const unsigned delay = 10;
+const std::chrono::milliseconds delay {10};
 
 PlayerModule::PlayerModule(ModuleInterface &interface):
     Module(interface),
-    update_timer(interface.Service(),boost::posix_time::millisec(delay)),
+    update_timer(interface.Service(),delay),
     acceptor(interface.Service(), tcp::endpoint(tcp::v4(),33334))
 {
 }
@@ -50,7 +50,7 @@ void PlayerModule::Update(const boost::system::error_code &error)
         user->send(package);
     }
 
-    update_timer.expires_from_now(boost::posix_time::millisec(delay));
+    update_timer.expires_at(std::chrono::steady_clock::now() + delay);
     update_timer.async_wait(boost::bind(&PlayerModule::Update,this , boost::asio::placeholders::error));
 }
 

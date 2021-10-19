@@ -16,7 +16,7 @@
 class BulletModule: public Module
 {
     std::vector<std::shared_ptr<Bullet>> bullets; ///< контролери
-    boost::asio::deadline_timer update_timer;
+    boost::asio::steady_timer update_timer;
 public:
     BulletModule(ModuleInterface &interface);
 

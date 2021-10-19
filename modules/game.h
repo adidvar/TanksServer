@@ -2,12 +2,12 @@
 #define GAME_H
 
 #include <queue>
+#include <vector>
 
 #include "module.h"
 
-#include "boost/asio/io_service.hpp"
-#include "boost/asio/deadline_timer.hpp"
-#include "boost/bind/bind.hpp"
+#include <boost/asio/io_service.hpp>
+#include <boost/bind/bind.hpp>
 
 /**
  * @brief Клас з контролем гри
@@ -15,7 +15,7 @@
 class Game
 {
     ModuleInterface interface;
-    boost::asio::deadline_timer update_timer;
+    boost::asio::steady_timer update_timer;
     std::vector<std::shared_ptr<Module>> modules;
     std::queue<std::any> events;
 private:

@@ -9,7 +9,7 @@ const unsigned delay = 10;
 
 Game::Game(boost::asio::io_service &serv):
     interface(serv , boost::bind(&Game::Event, this, boost::placeholders::_1)),
-    update_timer(serv,boost::posix_time::millisec(delay))
+    update_timer(serv,std::chrono::milliseconds(delay))
 {
     modules.emplace_back(new PlayerModule(interface));
     modules.emplace_back(new Map(interface,"map.json"));
@@ -46,7 +46,8 @@ void Game::Update(const boost::system::error_code &error)
 
     cout << std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() << endl;
 
-    update_timer.expires_from_now(boost::posix_time::milliseconds(2));
+
+    update_timer.expires_from_now(std::chrono::milliseconds(delay));
     update_timer.async_wait(boost::bind(&Game::Update,this,boost::asio::placeholders::error));
 }
 

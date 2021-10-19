@@ -1,10 +1,10 @@
 #include "bulletmodule.h"
 
-const unsigned delay = 10;
+const std::chrono::milliseconds delay{ 10 };
 
 BulletModule::BulletModule(ModuleInterface &interface):
     Module(interface),
-    update_timer(interface.Service(),boost::posix_time::millisec(delay))
+    update_timer(interface.Service(),delay)
 {
 }
 
@@ -52,6 +52,6 @@ void BulletModule::Update(const boost::system::error_code &)
     std::string package = boost::json::serialize(GenerateJson()) + '\n';
     environment.SendEvent(package);
 
-    update_timer.expires_from_now(boost::posix_time::millisec(delay));
+    update_timer.expires_at(std::chrono::steady_clock::now() + delay);
     update_timer.async_wait(boost::bind(&BulletModule::Update,this , boost::asio::placeholders::error));
 }
