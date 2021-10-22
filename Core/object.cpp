@@ -32,22 +32,12 @@ float Object::Radius() const
     return 2.0f*static_cast<float>(sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0)));
 }
 
-void Object::Update()
+void Object::Update(unsigned delta_time)
 {
 
 }
 
 void Object::Collision(Object *obj, Vector normal)
-{
-
-}
-
-void Object::CollisionEnter(Object *obj, Vector normal)
-{
-
-}
-
-void Object::CollisionExit(Object *obj)
 {
 
 }

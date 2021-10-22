@@ -13,7 +13,7 @@ public:
     Bullet(ObjectInterface & interface, Vector position , size_t friend_id , float angle, unsigned damage);
     friend class BulletModule;
 
-    void Update();
+    void Update(unsigned delta_time) override;
 
     virtual void Collision(Object *obj , Vector normal);
 };

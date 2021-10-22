@@ -1,5 +1,6 @@
 #include "collision.h"
 #include <cmath>
+#include <cassert>
 
 bool in_range(float m1 , float m2 , float value)
 {
@@ -122,3 +123,34 @@ bool ExecuteCollision(Object *obj1, Object *obj2)
 }
 
 
+
+bool GetCollisions(const MultiPointShape & m1, const MultiPointShape &m2, std::vector<Vector> &n1, std::vector<Vector> &n2)
+{
+    assert(n1.emply());
+    assert(n2.empty());
+
+    std::vector<Line> lines1;
+    std::vector<Line> lines2;
+    {
+        m1.ToLines(std::back_inserter(lines1));
+        m2.ToLines(std::back_inserter(lines2));
+    }
+
+    bool col = false;
+
+    for(Line x1 : lines1)
+    {
+        for(Line x2 : lines2)
+        {
+            Vector position;
+            bool result = lines_collision(x1,x2,position);
+            if(result)
+            {
+                col = true;
+                n1.push_back(x2.normal);
+                n2.push_back(x1.normal);
+            }
+        }
+    }
+    return col;
+}

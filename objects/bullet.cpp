@@ -2,7 +2,8 @@
 #include "collider.h"
 #include "tank.h"
 
-const float Bullet::speed = 0.3f;
+const float Bullet::speed = 0.01f;
+const int border = 100;
 
 Bullet::Bullet(ObjectInterface &interface, Vector position , size_t friend_id , float angle, unsigned damage):
     Object(interface , position , {0.12f , 0.45f} , angle , true),
@@ -11,9 +12,12 @@ Bullet::Bullet(ObjectInterface &interface, Vector position , size_t friend_id , 
 {
 }
 
-void Bullet::Update()
+void Bullet::Update(unsigned delta_time)
 {
-    this->position = position + Vector::fromVector(speed,rotate);
+    this->position = position + Vector::fromVector(speed * delta_time ,rotate);
+    if(position.x < -border || position.x > border || position.y < -border || position.y > border){
+        this->Suicide();
+    }
 }
 
 void Bullet::Collision(class Object *object, Vector normal)

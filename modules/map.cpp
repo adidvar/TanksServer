@@ -16,7 +16,7 @@ Map::Map(ModuleInterface &interface, std::string url):
 
     info("Map loading...");
 
-    file.seekg(0, std::ios::end); 
+    file.seekg(0, std::ios::end);
     size_t length = file.tellg();    
     file.seekg(0, std::ios::beg);   
     char * buffer = new char[length];   

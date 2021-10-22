@@ -8,6 +8,7 @@ class Object;
 
 [[deprecated]]
 bool ExecuteCollision(Object *obj1 , Object *obj2);
+bool GetCollisions(const MultiPointShape& , const MultiPointShape& , std::vector<Vector>& , std::vector<Vector>&);
 
 Vector generate_normal(Line line);
 

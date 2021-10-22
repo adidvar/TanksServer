@@ -12,6 +12,7 @@ struct Vector
     float x;
     float y;
     static Vector fromVector(float forge , float angle );
+    static Vector fromVectorAndNormal(Vector from , Vector normal);
 
     float Module() const {return static_cast<float>(sqrt(pow(x,2) + pow(y,2)));}
     Vector Rotate(float angle) const;;
@@ -29,7 +30,9 @@ inline Vector Vector::fromVector(float forge, float angle)
 
 inline Vector Vector::Rotate(float angle) const
 {
-    return { x * static_cast<float>(cos(angle)) - y * static_cast<float>(sin(angle)) , x * static_cast<float>(sin(angle)) + y * static_cast<float>(cos(angle)) }; 
+    return { x * static_cast<float>(cos(angle)) - y * static_cast<float>(sin(angle)) , x * static_cast<float>(sin(angle)) + y * static_cast<float>(cos(angle)) };
 }
+
+
 
 #endif // MVECTOR_H

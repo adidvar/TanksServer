@@ -6,9 +6,9 @@
 #include "collider.h"
 #include "bullet.h"
 
-float Tank::move_speed = +0.025f;
-float Tank::rotation_speed = 0.03f;
-float Tank::tower_speed = 0.02f;
+float Tank::move_speed = +0.00125f;
+float Tank::rotation_speed = 0.0015f;
+float Tank::tower_speed = 0.001f;
 
 Tank::Tank(ObjectInterface &interface, std::string name, int health_max):
     Object(interface, {0,0} , {2,1} ,0 , true),
@@ -18,11 +18,11 @@ Tank::Tank(ObjectInterface &interface, std::string name, int health_max):
 {
 }
 
-void Tank::Update()
+void Tank::Update(unsigned delta_time)
 {
-    position = position + Vector::fromVector(controller.position_direction * move_speed , rotate);
-    rotate += controller.angle_direction * rotation_speed;
-    tower_angle += controller.tower_angle_direction * tower_speed /*+ controller.angle_direction * rotation_speed*/;
+    position = position + Vector::fromVector(controller.position_direction * move_speed * delta_time, rotate);
+    rotate += controller.angle_direction * rotation_speed * delta_time;
+    tower_angle += controller.tower_angle_direction * tower_speed * delta_time /*+ controller.angle_direction * rotation_speed*/;
 }
 
 void Tank::SetMove(int move, int rotation, int tower_rotation)

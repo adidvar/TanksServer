@@ -14,12 +14,12 @@ class Container
 #ifdef SCREEN
     collision_visualizer* visual;
 #endif
-    std::list<std::shared_ptr<Object>> objects;
+    std::vector<std::shared_ptr<Object>> objects;
 public:
     Container();
     void Push(std::shared_ptr<Object> object);
     void Remove(std::shared_ptr<Object> obj);
-    void Update();
+    void Update(unsigned delta_time);
 };
 
 #endif // CONTAINER_H

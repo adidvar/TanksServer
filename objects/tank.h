@@ -31,7 +31,7 @@ protected:
 public:
     Tank(ObjectInterface & interface , std::string name, int health_max);
 
-    virtual void Update() override;
+    virtual void Update(unsigned delta_time) override;
 
     void Spawn(Vector position , size_t team_id);
     void SetMove(int move , int  rotation , int tower_rotation);
@@ -39,7 +39,7 @@ public:
     size_t Team();
     bool IsLive();
 
-    virtual void Collision(Object *obj , Vector normal) override;
+    virtual void Collision(Object *obj , std::vector<Vector> normal) override;
     virtual MultiPointShape Poligon() const override;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги

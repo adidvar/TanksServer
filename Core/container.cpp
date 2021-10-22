@@ -3,6 +3,8 @@
 #include "out.h"
 #include "collision.h"
 
+#include <algorithm>
+
 Container::Container()
 #ifdef SCREEN
     :
@@ -21,7 +23,7 @@ void Container::Remove(std::shared_ptr<Object> obj)
     error("Remove");
 }
 
-void Container::Update()
+void Container::Update(unsigned delta_time)
 {
     if(objects.size() == 0)
         return;
@@ -29,7 +31,7 @@ void Container::Update()
     auto t = std::remove_if(objects.begin(),objects.end(),[](const std::shared_ptr<Object> &o){return o.use_count()==1;});
     objects.erase(t,objects.end());
 
-    objects.sort([](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() > o2->Active();});
+    std::sort(objects.begin(),objects.end(),[](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() > o2->Active();});
     auto active_end = objects.begin();
 
     while(active_end!= objects.end())
@@ -38,32 +40,18 @@ void Container::Update()
             break;
         ++active_end;
     }
-#ifdef SCREEN
-    std::vector<MultiPointShape> col;
-#endif
+
     for(auto first = objects.begin() ; first != active_end && first != objects.end() ; ++first)
     {
         for(auto second = std::next(first) ; second != objects.end() ; ++second)
         {
             if(ExecuteCollision(first->get(),second->get()))
             {
-#ifdef SCREEN
-                col.push_back(first->get()->Poligon());
-                col.push_back(second->get()->Poligon());
-#endif
+
             }
+
         }
     }
-
-#ifdef SCREEN
-        {
-            visual->clear();
-            for(const auto &x : this->objects)
-                visual->push(x->Poligon());
-             for(const auto &x : col)
-                visual->pushCollision(x);
-        }
-#endif
     for(const auto& x : objects)
-        x->Update();
+        x->Update(delta_time);
 }

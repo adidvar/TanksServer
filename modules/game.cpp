@@ -5,7 +5,7 @@
 #include "map.h"
 #include "bulletmodule.h"
 
-const unsigned delay = 10;
+const std::chrono::milliseconds delay{10};
 
 Game::Game(boost::asio::io_service &serv):
     interface(serv , boost::bind(&Game::Event, this, boost::placeholders::_1)),
@@ -41,13 +41,11 @@ void Game::Update(const boost::system::error_code &error)
         for (auto& module : modules)
             module->Event(event);
     }
+    auto s_timer = std::chrono::steady_clock::now();
+    interface.container.Update(std::chrono::duration_cast<std::chrono::milliseconds>(dur).count());
+    auto uduration = std::chrono::steady_clock::now() - s_timer;
 
-    interface.container.Update();
-
-    cout << std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() << endl;
-
-
-    update_timer.expires_from_now(std::chrono::milliseconds(delay));
+    update_timer.expires_from_now(delay);
     update_timer.async_wait(boost::bind(&Game::Update,this,boost::asio::placeholders::error));
 }
 
