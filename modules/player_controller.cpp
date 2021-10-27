@@ -1,7 +1,5 @@
 #include "player_controller.h"
 
-#include <boost/json/src.hpp>
-
 #include <out.h>
 
 player_controller::player_controller(ObjectInterface &interface , tcp::socket *sock):
