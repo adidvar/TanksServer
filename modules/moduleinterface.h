@@ -12,7 +12,7 @@
 class ModuleInterface
 {
 private:
-    ObjectInterface interface;
+    GetObjectInterface interface;
     Container container;
 
     boost::asio::io_service &service;
@@ -36,7 +36,7 @@ public:
     */
     void SendEvent(std::any event);
 
-    ObjectInterface& ObjectInterface();
+    GetObjectInterface& GetObjectInterface();
     Container& Physics();
     boost::asio::io_service& Service();
 };

@@ -10,7 +10,11 @@ protected:
     friend class Map;
 public:
     Collider(ObjectInterface& obj, PointShape p);
-    virtual void Collision(Object*, Vector) override;
+
+    virtual void CollisionCycleBegin();
+    virtual void CollisionCycleEnd();
+    virtual void CollisionEvent(Object *obj , Vector normal);
+
     virtual MultiPointShape Poligon() const override;
 };
 

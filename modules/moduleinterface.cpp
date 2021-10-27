@@ -14,7 +14,7 @@ void ModuleInterface::SendEvent(std::any event)
     sendevent(event);
 }
 
-ObjectInterface& ModuleInterface::ObjectInterface()
+ObjectInterface& ModuleInterface::GetObjectInterface()
 {
     return interface;
 }

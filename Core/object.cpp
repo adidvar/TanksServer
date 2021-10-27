@@ -37,11 +37,6 @@ void Object::Update(unsigned delta_time)
 
 }
 
-void Object::Collision(Object *obj, Vector normal)
-{
-
-}
-
 void Object::Suicide()
 {
     this->is_live = false;

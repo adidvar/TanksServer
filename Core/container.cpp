@@ -32,26 +32,46 @@ void Container::Update(unsigned delta_time)
     objects.erase(t,objects.end());
 
     std::sort(objects.begin(),objects.end(),[](shared_ptr<Object> o1 , shared_ptr<Object> o2){return o1->Active() > o2->Active();});
-    auto active_end = objects.begin();
+    size_t active_end = 0;
 
-    while(active_end!= objects.end())
+    while(active_end != objects.size())
     {
-        if( (*active_end)->Active() == 0 )
+        if( objects[active_end]->Active() == 0 )
             break;
         ++active_end;
     }
 
-    for(auto first = objects.begin() ; first != active_end && first != objects.end() ; ++first)
-    {
-        for(auto second = std::next(first) ; second != objects.end() ; ++second)
-        {
-            if(ExecuteCollision(first->get(),second->get()))
-            {
+    for(auto &x : objects)
+        x->CollisionCycleBegin();
 
+    std::vector<MultiPointShape> colliders;
+    std::vector<Vector> n1 , n2;
+
+    for(auto &x : objects)
+        colliders.push_back(x->Poligon());
+
+    for(size_t first = 0 ; first != active_end && first != objects.size() ; ++first)
+    {
+        for(auto second = first+1 ; second != objects.size() ; ++second)
+        {
+            if(GetCollisions(colliders[first],colliders[second],n1,n2))
+            {
+                for(auto &x : n1){
+                    objects[second]->CollisionEvent(objects[first].get(),x);
+                }
+                for(auto &x : n2){
+                    objects[first]->CollisionEvent(objects[second].get(),x);
+                }
+                n1.clear();
+                n2.clear();
             }
 
         }
     }
+
+    for(auto &x : objects)
+        x->CollisionCycleEnd();
+
     for(const auto& x : objects)
         x->Update(delta_time);
 }

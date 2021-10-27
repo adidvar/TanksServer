@@ -39,7 +39,10 @@ public:
     size_t Team();
     bool IsLive();
 
-    virtual void Collision(Object *obj , std::vector<Vector> normal) override;
+    virtual void CollisionCycleBegin();
+    virtual void CollisionCycleEnd();
+
+    virtual void CollisionEvent(Object *obj , Vector normal) override;
     virtual MultiPointShape Poligon() const override;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги

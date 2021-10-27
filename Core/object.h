@@ -30,12 +30,9 @@ public:
     bool IsValid();
     void Suicide();
 
-    [[deprecated]]
-    virtual void Collision(Object *obj , Vector normal);
-
-    virtual void CollisionCycleBegin();
-    virtual void CollisionCycleEnd();
-    virtual void CollisionEvent(Object *obj , Vector normal);
+    virtual void CollisionCycleBegin() = 0;
+    virtual void CollisionCycleEnd() = 0;
+    virtual void CollisionEvent(Object *obj , Vector normal) = 0;
 
     bool Active();
 };

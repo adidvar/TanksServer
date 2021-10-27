@@ -81,7 +81,7 @@ void PlayerModule::Accept(tcp::socket* socket, const boost::system::error_code &
         return;
     }
 
-    std::shared_ptr<player_controller> c(new player_controller(environment.ObjectInterface(), socket));
+    std::shared_ptr<player_controller> c(new player_controller(environment.GetObjectInterface(), socket));
     this->players.push_back(c);
 
     auto[x , y , team] = spawns.at(rand()%spawns.size());

@@ -6,7 +6,17 @@ Collider::Collider(ObjectInterface &obj, PointShape p):
     shape.shapes.emplace_back(std::move(p));
 }
 
-void Collider::Collision(Object *, Vector)
+void Collider::CollisionCycleBegin()
+{
+
+}
+
+void Collider::CollisionCycleEnd()
+{
+
+}
+
+void Collider::CollisionEvent(Object *obj, Vector normal)
 {
 }
 

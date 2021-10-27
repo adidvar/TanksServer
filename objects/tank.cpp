@@ -48,7 +48,17 @@ bool Tank::IsLive()
     return health > 0;
 }
 
-void Tank::Collision(Object *obj, Vector normal)
+void Tank::CollisionCycleBegin()
+{
+
+}
+
+void Tank::CollisionCycleEnd()
+{
+
+}
+
+void Tank::CollisionEvent(Object *obj, Vector normal)
 {
     if (dynamic_cast<Collider*>(obj) != nullptr)
     {

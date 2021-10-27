@@ -82,7 +82,7 @@ float ColisionMaxDistance() const
     return 2.0*sqrt(pow(size.x/2.0f,2.0) + pow(size.y/2.0f,2.0));
 }
 */
-
+/*
 bool ExecuteCollision(Object *obj1, Object *obj2)
 {
     std::vector<Line> lines1;
@@ -121,6 +121,7 @@ bool ExecuteCollision(Object *obj1, Object *obj2)
     }
     return col;
 }
+*/
 
 
 
