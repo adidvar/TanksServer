@@ -127,9 +127,6 @@ bool ExecuteCollision(Object *obj1, Object *obj2)
 
 bool GetCollisions(const MultiPointShape & m1, const MultiPointShape &m2, std::vector<Vector> &n1, std::vector<Vector> &n2)
 {
-    assert(n1.emply());
-    assert(n2.empty());
-
     std::vector<Line> lines1;
     std::vector<Line> lines2;
     {
