@@ -63,8 +63,12 @@ void Tank::CollisionEvent(Object *obj, Vector normal , unsigned delta_time)
 {
     if (dynamic_cast<Collider*>(obj) != nullptr)
     {
-        info("Collision");
         position = position + normal * (move_speed) * delta_time;
+    }
+    if (dynamic_cast<Tank*>(obj) != nullptr)
+    {
+        if(this->controller.position_direction !=0)
+            position = position + normal * (move_speed) * delta_time;
     }
 }
 
