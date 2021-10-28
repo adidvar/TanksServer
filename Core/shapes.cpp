@@ -2,6 +2,8 @@
 
 void PointShape::ToLines(std::back_insert_iterator<std::vector<Line>> inserter) const
 {
+    if(this->points.size()==0)
+        return;
     for(size_t index = 1 ; index < this->points.size() ; ++index)
     {
         Vector normale = (points[index] - points[index-1]).Rotate(convexity ? M_PI_2 : -M_PI_2).Nomalize();
