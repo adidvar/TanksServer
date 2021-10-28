@@ -42,7 +42,7 @@ void Container::Update(unsigned delta_time)
     }
 
     for(auto &x : objects)
-        x->CollisionCycleBegin();
+        x->CollisionCycleBegin(delta_time);
 
     std::vector<MultiPointShape> colliders;
     std::vector<Vector> n1 , n2;
@@ -57,10 +57,10 @@ void Container::Update(unsigned delta_time)
             if(GetCollisions(colliders[first],colliders[second],n1,n2))
             {
                 for(auto &x : n1){
-                    objects[second]->CollisionEvent(objects[first].get(),x);
+                    objects[second]->CollisionEvent(objects[first].get(),x , delta_time);
                 }
                 for(auto &x : n2){
-                    objects[first]->CollisionEvent(objects[second].get(),x);
+                    objects[first]->CollisionEvent(objects[second].get(),x , delta_time);
                 }
                 n1.clear();
                 n2.clear();
@@ -70,7 +70,7 @@ void Container::Update(unsigned delta_time)
     }
 
     for(auto &x : objects)
-        x->CollisionCycleEnd();
+        x->CollisionCycleEnd(delta_time);
 
     for(const auto& x : objects)
         x->Update(delta_time);

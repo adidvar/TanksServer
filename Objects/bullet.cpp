@@ -20,17 +20,17 @@ void Bullet::Update(unsigned delta_time)
     }
 }
 
-void Bullet::CollisionCycleBegin()
+void Bullet::CollisionCycleBegin(unsigned delta_time)
 {
 
 }
 
-void Bullet::CollisionCycleEnd()
+void Bullet::CollisionCycleEnd(unsigned delta_time)
 {
 
 }
 
-void Bullet::CollisionEvent(class Object *object, Vector normal)
+void Bullet::CollisionEvent(class Object *object, Vector normal , unsigned delta_time)
 {
     if (this->IsValid() == false)
         return;

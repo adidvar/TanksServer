@@ -6,7 +6,6 @@
 #include <chrono>
 
 #include "object.h"
-#include "collision_visualizer.h"
 
 class Container
 {

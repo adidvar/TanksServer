@@ -9,6 +9,7 @@
 float Tank::move_speed = +0.00125f;
 float Tank::rotation_speed = 0.0015f;
 float Tank::tower_speed = 0.001f;
+const float tower_len = 2.4f;
 
 Tank::Tank(ObjectInterface &interface, std::string name, int health_max):
     Object(interface, {0,0} , {2,1} ,0 , true),
@@ -34,7 +35,7 @@ void Tank::SetMove(int move, int rotation, int tower_rotation)
 
 void Tank::Fire()
 {
-    auto bullet = new Bullet(this->interface , this->position , this->team_id , this->tower_angle , 60);
+    auto bullet = new Bullet(this->interface , this->position + Vector::fromVector(tower_len , tower_angle) , this->team_id , this->tower_angle , 60);
     interface.SpawnBullet( std::shared_ptr<Bullet>(bullet) );
 }
 
@@ -48,22 +49,22 @@ bool Tank::IsLive()
     return health > 0;
 }
 
-void Tank::CollisionCycleBegin()
+void Tank::CollisionCycleBegin(unsigned delta_time)
 {
 
 }
 
-void Tank::CollisionCycleEnd()
+void Tank::CollisionCycleEnd(unsigned delta_time)
 {
 
 }
 
-void Tank::CollisionEvent(Object *obj, Vector normal)
+void Tank::CollisionEvent(Object *obj, Vector normal , unsigned delta_time)
 {
     if (dynamic_cast<Collider*>(obj) != nullptr)
     {
         info("Collision");
-        position = position + normal * (move_speed);
+        position = position + normal * (move_speed) * delta_time;
     }
 }
 

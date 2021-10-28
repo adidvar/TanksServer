@@ -39,10 +39,10 @@ public:
     size_t Team();
     bool IsLive();
 
-    virtual void CollisionCycleBegin();
-    virtual void CollisionCycleEnd();
+    virtual void CollisionCycleBegin(unsigned delta_time) override;
+    virtual void CollisionCycleEnd(unsigned delta_time) override;
 
-    virtual void CollisionEvent(Object *obj , Vector normal) override;
+    virtual void CollisionEvent(Object *obj , Vector normal , unsigned delta_time) override;
     virtual MultiPointShape Poligon() const override;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги

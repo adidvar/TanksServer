@@ -6,17 +6,17 @@ Collider::Collider(ObjectInterface &obj, PointShape p):
     shape.shapes.emplace_back(std::move(p));
 }
 
-void Collider::CollisionCycleBegin()
+void Collider::CollisionCycleBegin(unsigned delta_time)
 {
 
 }
 
-void Collider::CollisionCycleEnd()
+void Collider::CollisionCycleEnd(unsigned delta_time)
 {
 
 }
 
-void Collider::CollisionEvent(Object *obj, Vector normal)
+void Collider::CollisionEvent(Object *obj, Vector normal, unsigned delta_time)
 {
 }
 

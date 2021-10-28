@@ -15,9 +15,9 @@ public:
 
     void Update(unsigned delta_time) override;
 
-    virtual void CollisionCycleBegin() override;
-    virtual void CollisionCycleEnd() override;
-    virtual void CollisionEvent(Object *obj , Vector normal) override;
+    virtual void CollisionCycleBegin(unsigned delta_time) override;
+    virtual void CollisionCycleEnd(unsigned delta_time) override;
+    virtual void CollisionEvent(Object *obj , Vector normal , unsigned delta_time) override;
 };
 
 #endif // BULLET_H

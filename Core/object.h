@@ -30,9 +30,9 @@ public:
     bool IsValid();
     void Suicide();
 
-    virtual void CollisionCycleBegin() = 0;
-    virtual void CollisionCycleEnd() = 0;
-    virtual void CollisionEvent(Object *obj , Vector normal) = 0;
+    virtual void CollisionCycleBegin(unsigned delta_time) = 0;
+    virtual void CollisionCycleEnd(unsigned delta_time) = 0;
+    virtual void CollisionEvent(Object *obj , Vector normal , unsigned delta_time) = 0;
 
     bool Active();
 };
