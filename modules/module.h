@@ -11,6 +11,7 @@ protected:
     ModuleInterface &environment;
 public:
     Module(ModuleInterface &init);
+    virtual ~Module() {};
     virtual void Start() = 0;
     virtual void Event(std::any& event) {};
 };

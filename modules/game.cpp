@@ -4,6 +4,7 @@
 #include "player_controller.h"
 #include "map.h"
 #include "bulletmodule.h"
+#include "beaconmodule.h"
 
 const std::chrono::milliseconds delay{10};
 
@@ -14,6 +15,7 @@ Game::Game(boost::asio::io_service &serv):
     modules.emplace_back(new PlayerModule(interface));
     modules.emplace_back(new Map(interface,"map.json"));
     modules.emplace_back(new BulletModule(interface));
+    modules.emplace_back(new BeaconModule(interface));
 
     interface.interface.spawnbullet = std::bind(&BulletModule::SpawnBullet , dynamic_cast<BulletModule*>(modules.back().get()) , std::placeholders::_1);
 
