@@ -14,6 +14,8 @@ protected:
     std::string maptext;
     std::vector<std::shared_ptr<Collider>> walls;
     std::vector<std::tuple<float , float , int>> spawn_points;
+
+    bool LoadMap(std::string file_name);
 public:
     Map(ModuleInterface &interface , std::string file);
 
@@ -22,7 +24,9 @@ public:
 
     virtual void Start() override;
     virtual void Event(std::any &sign) override;
-    const std::vector<std::tuple<float,float,int>>& GetSpawns();
+
+    const std::vector<std::tuple<float,float,int>>& GetSpawns() const;
+    const std::vector<std::shared_ptr<Collider>>& GetWalls() const;
 };
 
 struct MapUpdateEvent{

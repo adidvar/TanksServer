@@ -61,7 +61,7 @@ void BulletModule::Update(const boost::system::error_code &)
     }
 
     std::string package = boost::json::serialize(GenerateJson()) + '\n';
-    environment.SendEvent(package);
+    environment.SendEvent(BroadCastEvent{package});
 
     update_timer.expires_at(std::chrono::steady_clock::now() + delay);
     update_timer.async_wait(boost::bind(&BulletModule::Update,this , boost::asio::placeholders::error));

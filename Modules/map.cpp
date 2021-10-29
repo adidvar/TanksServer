@@ -1,57 +1,16 @@
 #include "map.h"
-#include <out.h>
-#include "player_controller.h"
 
-#include <assert.h>
-
+#include <filesystem>
+#include <iostream>
 #include <fstream>
+
+#include "playermodule.h"
 
 Map::Map(ModuleInterface &interface, std::string url):
     Module(interface)
 {
-    std::fstream file;
-    file.open(url);
-    if(file.is_open()==false)
-        error("Cant open map.json");
-
-    info("Map loading...");
-
-    file.seekg(0, std::ios::end);
-    size_t length = file.tellg();    
-    file.seekg(0, std::ios::beg);   
-    char * buffer = new char[length];   
-    file.read(buffer, length);  
-    info(std::string("Length ") + to_string(length));
-    maptext = std::string(buffer, length);
-    maptext.push_back('\n');
-    delete[] buffer;
-
-    boost::json::value root = boost::json::parse(maptext);
-
-    boost::json::object &root_obj = root.as_object();
-    boost::json::array &colliders = root_obj["collider"].as_array();
-    for(auto &col : colliders){
-        auto &points = col.as_object()["points"].as_array();
-        PointShape shape;
-        for(auto p : points){
-            auto pos = p.as_array();
-            shape.points.emplace_back(Vector{static_cast<float>(pos[0].as_double()),static_cast<float>(pos[1].as_double())});
-        }
-        shape.convexity = col.as_object()["convexity"].as_bool();
-        this->walls.emplace_back(new Collider(environment.GetObjectInterface(),shape));
-    }
-    info(std::string("Items ") + to_string(this->walls.size()));
-
-    auto spawn_points = root_obj["spawn points"].as_array();
-    for(auto p : spawn_points){
-        auto p_obj = p.as_object();
-        this->spawn_points.push_back({p_obj["x"].as_double() , p_obj["y"].as_double() , p_obj["team"].as_int64()});
-    }
-    info(std::string("Spawns ")+to_string(spawn_points.size()));
-
-    file.close();
-
-    return ;
+   if( LoadMap(url) == false)
+       std::cout << "Error while map loading" << std::endl;
 }
 
 boost::json::object Map::DefaultSettings() const
@@ -65,6 +24,55 @@ void Map::LoadSettings(const boost::json::object &obj)
 
 }
 
+bool Map::LoadMap(std::string file_name)
+{
+    std::ifstream file(file_name , std::ios_base::binary);
+    if(file.is_open()==false)
+        return false;
+
+    std::string map;
+    std::vector<std::shared_ptr<Collider>> walls;
+    std::vector<std::tuple<float , float , int>> spawns;
+
+    auto size = std::filesystem::file_size(file_name);
+    auto buffer = new char[size];
+    file.read(buffer, size);
+    map = std::string(buffer, size);
+    delete[] buffer;
+    file.close();
+
+    try{
+        boost::json::value root_value = boost::json::parse(map);
+        boost::json::object &root = root_value.as_object();
+        boost::json::array &colliders = root["collider"].as_array();
+        boost::json::array &spawn_points = root["spawn points"].as_array();
+
+        for(auto &col : colliders){
+            auto &points = col.as_object()["points"].as_array();
+            PointShape shape;
+            for(auto &p : points){
+                auto &pos = p.as_array();
+                shape.points.emplace_back(Vector{static_cast<float>(pos[0].as_double()),static_cast<float>(pos[1].as_double())});
+            }
+            shape.convexity = col.as_object()["convexity"].as_bool();
+            walls.emplace_back(new Collider(environment.GetObjectInterface(),shape));
+        }
+
+        for(boost::json::value &p_value : spawn_points){
+            boost::json::object &point = p_value.as_object();
+            spawns.push_back({point["x"].as_double() , point["y"].as_double() , point["team"].as_int64()});
+        }
+    }catch(bool){}/*catch (std::invalid_argument &argument){
+        std::cout << argument.what() << std::endl;
+        return false;
+    }*/
+    this->maptext = std::move(map);
+    maptext.push_back('\n');
+    this->spawn_points = std::move(spawns);
+    this->walls = std::move(walls);
+    return true;
+}
+
 void Map::Start()
 {
     for( auto &x : this->walls)
@@ -74,15 +82,19 @@ void Map::Start()
 
 void Map::Event(std::any &sign)
 {
-    std::shared_ptr<player_controller>* controller;
-    controller = std::any_cast<std::shared_ptr<player_controller>>(&sign);
-    if (controller != nullptr) 
+    NewPlayerEvent *new_p = std::any_cast<NewPlayerEvent>(&sign);
+    if (new_p != nullptr)
     {
-        (*controller)->send(this->maptext);
+        new_p->player->send(this->maptext);
     }
 }
 
-const std::vector<std::tuple<float, float, int> > &Map::GetSpawns()
+const std::vector<std::tuple<float, float, int> > &Map::GetSpawns() const
 {
-    return this->spawn_points;
+    return spawn_points;
+}
+
+const std::vector<std::shared_ptr<Collider> > &Map::GetWalls() const
+{
+    return walls;
 }

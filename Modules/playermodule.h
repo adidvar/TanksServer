@@ -38,4 +38,16 @@ private:
     virtual void Event(std::any &event) override;
 };
 
+struct BroadCastEvent{
+    std::string message;
+};
+
+struct NewPlayerEvent{
+    std::shared_ptr<player_controller> player;
+};
+
+struct PlayerDisconnect{
+    std::shared_ptr<player_controller> player;
+};
+
 #endif // PLAYERMODULE_H

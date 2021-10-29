@@ -3,7 +3,7 @@
 
 #include <out.h>
 
-const std::chrono::milliseconds delay {10};
+static std::chrono::milliseconds delay {10};
 
 PlayerModule::PlayerModule(ModuleInterface &interface):
     Module(interface),
@@ -20,12 +20,20 @@ PlayerModule::~PlayerModule()
 boost::json::object PlayerModule::DefaultSettings() const
 {
    boost::json::object set;
+   set["move_speed"] = 0.00125f;
+   set["rotate_speed"] = 0.00125f;
+   set["tower_speed"] = 0.00125f;
+   set["delay"] = delay.count();
    return set;
 }
 
 void PlayerModule::LoadSettings(const boost::json::object &obj)
 {
-
+    boost::json::object copy = obj;
+    Tank::move_speed = copy["move_speed"].as_double();
+    Tank::rotation_speed = copy["rotate_speed"].as_double();
+    Tank::tower_speed = copy["tower_speed"].as_double();
+    delay = std::chrono::milliseconds(copy["delay"].as_int64());
 }
 
 void PlayerModule::Start()
@@ -44,6 +52,10 @@ void PlayerModule::Update(const boost::system::error_code &error)
 
     {   ///< Видалення закритих зєднаннь
         auto it = remove_if(players.begin(),players.end(),[](const std::shared_ptr<player_controller> p){return !p->is_valid();});
+
+        for(auto it_b = it ; it_b != players.end() ; ++it_b)
+            environment.SendEvent(PlayerDisconnect{*it_b});
+
         players.erase(it,players.end());
     }
     for(auto& user : this->players){
@@ -99,7 +111,7 @@ void PlayerModule::Accept(tcp::socket* socket, const boost::system::error_code &
 
     c->GetTank()->Spawn({ x,y }, rand());
     this->environment.Physics().Push(c->GetTank());
-    this->environment.SendEvent(c);
+    this->environment.SendEvent(NewPlayerEvent{c});
     info("New client");
 
     tcp::socket *new_sock = new tcp::socket(environment.Service());
@@ -108,10 +120,10 @@ void PlayerModule::Accept(tcp::socket* socket, const boost::system::error_code &
 
 void PlayerModule::Event(std::any &event)
 {
-    std::string *broadcast = std::any_cast<std::string>(&event);
+    BroadCastEvent *broadcast = std::any_cast<BroadCastEvent>(&event);
     if( broadcast != nullptr )
     {
-        BroadCast(*broadcast);
+        BroadCast(broadcast->message);
     }
     MapUpdateEvent *map_update = std::any_cast<MapUpdateEvent>(&event);
     if( map_update != nullptr){

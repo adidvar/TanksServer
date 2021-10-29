@@ -49,6 +49,7 @@ public:
     void Damage(unsigned damage);
 
     friend class player_controller;
+    friend class PlayerModule;
 };
 
 #endif // TANK_H
