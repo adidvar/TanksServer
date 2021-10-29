@@ -24,6 +24,11 @@ public:
     void SpawnBullet(std::shared_ptr<Bullet> bullet);
     boost::json::object GenerateBulletJson(const std::shared_ptr<Bullet> &bullet);
     boost::json::object GenerateJson();
+
+    virtual boost::json::object DefaultSettings() const override;
+    virtual void LoadSettings(const boost::json::object &obj) override;
+
+
 private:
     void Update(const boost::system::error_code&);
 };

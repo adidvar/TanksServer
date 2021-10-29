@@ -12,6 +12,7 @@
 class BeaconModule : public Module
 {
     boost::asio::ip::udp::socket acceptor;
+    boost::json::object reply;
 public:
     BeaconModule(ModuleInterface &interface);
     virtual ~BeaconModule() override;
@@ -21,6 +22,10 @@ private:
     void ReadyRead(const boost::system::error_code &error , size_t transfered);
 
     virtual void Event(std::any &event) override {};
+
+    virtual boost::json::object DefaultSettings()const override;
+    virtual void LoadSettings(const boost::json::object &obj) override;
+
 
     const static size_t buffer_size = 1024;
     int8_t buffer[buffer_size];

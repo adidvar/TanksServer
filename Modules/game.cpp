@@ -6,6 +6,8 @@
 #include "bulletmodule.h"
 #include "beaconmodule.h"
 
+#include <fstream>
+
 const std::chrono::milliseconds delay{10};
 
 Game::Game(boost::asio::io_service &serv):
@@ -16,6 +18,43 @@ Game::Game(boost::asio::io_service &serv):
     modules.emplace_back(new Map(interface,"map.json"));
     modules.emplace_back(new BeaconModule(interface));
     modules.emplace_back(new BulletModule(interface));
+
+    std::ifstream file("config.json");
+    file.seekg(0, std::ios::end);
+    long long int length = file.tellg();
+    file.seekg(0, std::ios::beg);
+    char * buffer = nullptr;
+    file.close();
+
+    boost::json::value root_v;
+    try{
+        buffer = new char[length];
+        file.read(buffer, length);
+        root_v = boost::json::parse( std::string(buffer, length) );
+    } catch (std::bad_alloc &alloc) {
+        root_v = boost::json::object();
+    } catch (boost::system::system_error &error){
+        root_v = boost::json::object();
+    }
+
+    boost::json::object &root = root_v.as_object();
+
+    delete[] buffer;
+
+    for(auto &x :modules)
+    {
+        try {
+            x->LoadSettings(root[x->ModuleName()].as_object());
+        }  catch (std::invalid_argument &argument) {
+            root[x->ModuleName()] = x->DefaultSettings();
+            x->LoadSettings(root[x->ModuleName()].as_object());
+        }
+    }
+
+    auto text = boost::json::serialize(root_v);
+    ofstream ofile("config.json",ios_base::ate);
+    ofile.write(text.data(),text.size());
+    ofile.close();
 
     interface.interface.spawnbullet = std::bind(&BulletModule::SpawnBullet , dynamic_cast<BulletModule*>(modules.back().get()) , std::placeholders::_1);
 

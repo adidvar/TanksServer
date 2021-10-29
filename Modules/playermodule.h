@@ -25,6 +25,9 @@ public:
     PlayerModule(ModuleInterface &interface);
     ~PlayerModule();
 
+    virtual boost::json::object DefaultSettings() const override ;
+    virtual void LoadSettings(const boost::json::object &obj) override;
+
     virtual void Start() override;
     void BroadCast(std::string text);
 private:

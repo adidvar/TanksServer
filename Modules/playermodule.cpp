@@ -17,6 +17,17 @@ PlayerModule::~PlayerModule()
     this->acceptor.cancel();
 }
 
+boost::json::object PlayerModule::DefaultSettings() const
+{
+   boost::json::object set;
+   return set;
+}
+
+void PlayerModule::LoadSettings(const boost::json::object &obj)
+{
+
+}
+
 void PlayerModule::Start()
 {
     tcp::socket *sock = new tcp::socket(environment.Service());

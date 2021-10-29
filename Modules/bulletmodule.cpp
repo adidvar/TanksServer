@@ -42,6 +42,17 @@ boost::json::object BulletModule::GenerateJson()
     return root;
 }
 
+boost::json::object BulletModule::DefaultSettings() const
+{
+   boost::json::object set;
+   return set;
+}
+
+void BulletModule::LoadSettings(const boost::json::object &obj)
+{
+
+}
+
 void BulletModule::Update(const boost::system::error_code &)
 { 
     {   ///< Видалення закритих зєднанн

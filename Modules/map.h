@@ -17,6 +17,9 @@ protected:
 public:
     Map(ModuleInterface &interface , std::string file);
 
+    virtual boost::json::object DefaultSettings() const override;
+    virtual void LoadSettings(const boost::json::object &obj) override;
+
     virtual void Start() override;
     virtual void Event(std::any &sign) override;
     const std::vector<std::tuple<float,float,int>>& GetSpawns();

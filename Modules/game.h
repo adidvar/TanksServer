@@ -7,6 +7,7 @@
 #include "module.h"
 
 #include <boost/asio/io_service.hpp>
+#include <boost/json/error.hpp>
 #include <boost/bind/bind.hpp>
 
 /**

@@ -54,6 +54,17 @@ Map::Map(ModuleInterface &interface, std::string url):
     return ;
 }
 
+boost::json::object Map::DefaultSettings() const
+{
+    boost::json::object set;
+    return set;
+}
+
+void Map::LoadSettings(const boost::json::object &obj)
+{
+
+}
+
 void Map::Start()
 {
     for( auto &x : this->walls)
