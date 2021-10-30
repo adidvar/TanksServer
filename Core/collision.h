@@ -14,6 +14,8 @@ Vector generate_normal(Line line);
 
 bool lines_collision(Line l1 , Line l2 , Vector &collision);
 
+Vector NormalBlocking(Vector direction , Vector normal);
+
 
 
 #endif // COLLISION_H

@@ -7,6 +7,7 @@
 #include "beaconmodule.h"
 
 #include <fstream>
+#include <filesystem>
 
 const std::chrono::milliseconds delay{10};
 
@@ -20,11 +21,8 @@ Game::Game(boost::asio::io_service &serv):
     modules.emplace_back(new BulletModule(interface));
 
     std::ifstream file("config.json");
-    file.seekg(0, std::ios::end);
-    long long int length = file.tellg();
-    file.seekg(0, std::ios::beg);
+    long long int length = filesystem::file_size("config.json");
     char * buffer = nullptr;
-    file.close();
 
     boost::json::value root_v;
     try{
@@ -34,8 +32,11 @@ Game::Game(boost::asio::io_service &serv):
     } catch (std::bad_alloc &alloc) {
         root_v = boost::json::object();
     } catch (boost::system::system_error &error){
+        cout << error.what() << endl;
         root_v = boost::json::object();
     }
+
+    file.close();
 
     boost::json::object &root = root_v.as_object();
 

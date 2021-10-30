@@ -14,6 +14,9 @@ protected:
     size_t team_id = 0;
     float tower_angle = 0.0;
 
+    Vector speed;
+    Vector col_speed;
+
     struct Controller
     {
         float position_direction = 0;

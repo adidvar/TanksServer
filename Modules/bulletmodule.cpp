@@ -1,6 +1,6 @@
 #include "bulletmodule.h"
 
-const std::chrono::milliseconds delay{ 10 };
+static std::chrono::milliseconds delay{ 10 };
 
 BulletModule::BulletModule(ModuleInterface &interface):
     Module(interface),
@@ -45,12 +45,14 @@ boost::json::object BulletModule::GenerateJson()
 boost::json::object BulletModule::DefaultSettings() const
 {
    boost::json::object set;
+   set["delay"] = delay.count();
    return set;
 }
 
 void BulletModule::LoadSettings(const boost::json::object &obj)
 {
-
+    auto copy = obj;
+    delay = std::chrono::milliseconds{copy["delay"].as_uint64()};
 }
 
 void BulletModule::Update(const boost::system::error_code &)
