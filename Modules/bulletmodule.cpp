@@ -52,7 +52,7 @@ boost::json::object BulletModule::DefaultSettings() const
 void BulletModule::LoadSettings(const boost::json::object &obj)
 {
     auto copy = obj;
-    delay = std::chrono::milliseconds{copy["delay"].as_uint64()};
+    delay = std::chrono::milliseconds{copy["delay"].as_int64()};
 }
 
 void BulletModule::Update(const boost::system::error_code &)

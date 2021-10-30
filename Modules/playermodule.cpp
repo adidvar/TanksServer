@@ -33,7 +33,7 @@ void PlayerModule::LoadSettings(const boost::json::object &obj)
     Tank::move_speed = copy["move_speed"].as_double();
     Tank::rotation_speed = copy["rotate_speed"].as_double();
     Tank::tower_speed = copy["tower_speed"].as_double();
-    delay = std::chrono::milliseconds(copy["delay"].as_uint64());
+    delay = std::chrono::milliseconds(copy["delay"].as_int64());
 }
 
 void PlayerModule::Start()
