@@ -4,7 +4,7 @@
 
 player_controller::player_controller(ObjectInterface &interface , tcp::socket *sock):
     channel(sock),
-    tank( new  Tank(interface , "The Ivan Python coder" , 300) ),
+    tank( std::make_shared<Tank>(interface , "The Ivan Python coder" , 300) ),
     valid(true)
 { 
     this->channel->async_read_some(boost::asio::buffer(read_buffer, buffer_size), boost::bind(&player_controller::readyread, this, boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
@@ -41,6 +41,8 @@ boost::json::object player_controller::GetPlayerJson() const
     tankjson["live"] = tank->IsLive();
     tankjson["health"] = tank->health;
     tankjson["health_max"] = tank->health_max;
+    tankjson["death"] = tank->death_counter;
+    tankjson["kill"] = tank->kill_counter;
     boost::json::object prediction_obj;
     prediction_obj["move_speed"] = Tank::move_speed;
     prediction_obj["rotate_speed"] = Tank::rotation_speed;
@@ -52,19 +54,25 @@ boost::json::object player_controller::GetPlayerJson() const
     return tankjson;
 }
 
-void player_controller::send(std::string data)
+void player_controller::send(std::string text)
 {
     if(valid==false)
         return;
 
-    boost::system::error_code code;
-    this->channel->send(boost::asio::buffer(data.c_str(), data.size()), 0, code);
-    if (code)
-    {
+    std::string *data = new std::string(text);
+    this->channel->async_send(boost::asio::buffer(data->c_str(), data->size()), boost::bind(&player_controller::sendevent , this , data,
+        boost::asio::placeholders::error , boost::asio::placeholders::bytes_transferred));
+
+}
+void player_controller::sendevent(std::string* data, const boost::system::error_code& code, size_t bytes_transfered)
+{
+    if (!bool(error)) {
         warning(code.message());
         destroy();
-        return;
     }
+    if (data->size() != bytes_transfered)
+        warning("send error");
+    delete data;
 }
 
 void player_controller::readyread(const boost::system::error_code &code , size_t bytes_transfered)

@@ -9,6 +9,8 @@
 #include "container.h"
 #include "objectinterface.h"
 
+class Module;
+
 class ModuleInterface
 {
 private:
@@ -16,13 +18,13 @@ private:
     Container container;
 
     boost::asio::io_service &service;
+    std::vector<std::shared_ptr<Module>> &modules;
 
     std::function<void(std::any)> sendevent;
 public:
-    ModuleInterface(boost::asio::io_service &serv , std::function<void(std::any)> sendevent);
+    ModuleInterface(boost::asio::io_service &serv , std::vector<std::shared_ptr<Module>> &modules , std::function<void(std::any)> sendevent);
     friend class Game;
 
-    /*
     template<typename ModuleType>
     std::shared_ptr<ModuleType> FindModule()
     {
@@ -33,7 +35,7 @@ public:
         }
         return nullptr;
     };
-    */
+
     void SendEvent(std::any event);
 
     ObjectInterface& GetObjectInterface();

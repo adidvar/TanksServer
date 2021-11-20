@@ -5,6 +5,7 @@
 #include "map.h"
 #include "bulletmodule.h"
 #include "beaconmodule.h"
+#include "texturesmodule.h"
 
 #include <fstream>
 #include <filesystem>
@@ -12,12 +13,13 @@
 const std::chrono::milliseconds delay{10};
 
 Game::Game(boost::asio::io_service &serv):
-    interface(serv , boost::bind(&Game::Event, this, boost::placeholders::_1)),
+    interface(serv , modules , boost::bind(&Game::Event, this, boost::placeholders::_1)),
     update_timer(serv,std::chrono::milliseconds(delay))
 {
     modules.emplace_back(new PlayerModule(interface));
     modules.emplace_back(new Map(interface,"map.json"));
     modules.emplace_back(new BeaconModule(interface));
+//    modules.emplace_back(new TexturesModule(interface));
     modules.emplace_back(new BulletModule(interface));
 
     std::ifstream file("config.json");

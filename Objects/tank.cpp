@@ -12,8 +12,8 @@ float Tank::rotation_speed = 0.0015f;
 float Tank::tower_speed = 0.001f;
 const float tower_len = 2.4f;
 
-Tank::Tank(ObjectInterface &interface, std::string name, int health_max):
-    Object(interface, {0,0} , {2,1} ,0 , true),
+Tank::Tank(ObjectInterface &interface , std::string name, int health_max):
+    RectObject(interface, {0,0} , {2,1} ,0 , true),
     name(name),
     health(health_max),
     health_max(health_max)
@@ -37,7 +37,7 @@ void Tank::SetMove(int move, int rotation, int tower_rotation)
 
 void Tank::Fire()
 {
-    auto bullet = new Bullet(this->interface , this->position + Vector::fromVector(tower_len , tower_angle) , this->team_id , this->tower_angle , 60);
+    auto bullet = new Bullet(this->interface , this->position + Vector::fromVector(tower_len , tower_angle) , weak_from_this() , this->team_id , this->tower_angle , 60);
     interface.SpawnBullet( std::shared_ptr<Bullet>(bullet) );
 }
 
@@ -49,6 +49,11 @@ size_t Tank::Team()
 bool Tank::IsLive()
 {
     return health > 0;
+}
+
+void Tank::RegisterKill()
+{
+    kill_counter++;
 }
 
 void Tank::CollisionCycleBegin(unsigned delta_time)
@@ -76,14 +81,9 @@ void Tank::CollisionEvent(Object *obj, Vector normal , unsigned delta_time)
     }
 }
 
-MultiPointShape Tank::Poligon() const
-{
-   auto objects = Object::Poligon();
-   return objects;
-}
-
 void Tank::Spawn(Vector position, size_t team_id)
 {
+    this->death_counter++;
     this->position = position;
     this->team_id = team_id;
     this->health = health_max;

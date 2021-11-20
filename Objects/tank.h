@@ -5,14 +5,17 @@
 #include <memory>
 #include <mvector.h>
 
-#include "object.h"
+#include "rectobject.h"
 
-class Tank : public Object
+class Tank : public RectObject , public std::enable_shared_from_this<Tank>
 {
 protected:
     std::string name = "NoName";
+    size_t player_id = 0;
     size_t team_id = 0;
     float tower_angle = 0.0;
+    size_t death_counter = 0;
+    size_t kill_counter = 0;
 
     Vector speed;
     Vector col_speed;
@@ -42,11 +45,12 @@ public:
     size_t Team();
     bool IsLive();
 
+    void RegisterKill();
+
     virtual void CollisionCycleBegin(unsigned delta_time) override;
     virtual void CollisionCycleEnd(unsigned delta_time) override;
 
     virtual void CollisionEvent(Object *obj , Vector normal , unsigned delta_time) override;
-    virtual MultiPointShape Poligon() const override;
 
     [[deprecated]] /// < сигнатура крива треба реєструвати потенціальні фраги
     void Damage(unsigned damage);

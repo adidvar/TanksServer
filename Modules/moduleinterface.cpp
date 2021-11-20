@@ -1,7 +1,8 @@
 #include "moduleinterface.h"
 
-ModuleInterface::ModuleInterface(boost::asio::io_service &serv, std::function<void (std::any)> sendevent):
+ModuleInterface::ModuleInterface(boost::asio::io_service &serv, std::vector<std::shared_ptr<Module> > &modules, std::function<void (std::any)> sendevent):
     service(serv),
+    modules(modules),
     sendevent(sendevent)
 {
 

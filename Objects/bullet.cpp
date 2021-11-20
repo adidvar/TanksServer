@@ -5,10 +5,11 @@
 const float Bullet::speed = 0.01f;
 const int border = 100;
 
-Bullet::Bullet(ObjectInterface &interface, Vector position , size_t friend_id , float angle, unsigned damage):
-    Object(interface , position , {0.12f , 0.45f} , angle , true),
+Bullet::Bullet(ObjectInterface &interface, Vector position , std::weak_ptr<Tank> sender, size_t team_id , float angle, unsigned damage):
+    RectObject(interface , position , {0.12f , 0.45f} , angle , true),
     damage(damage),
-    friend_id(friend_id)
+    team_id(team_id),
+    sender(sender)
 {
 }
 
@@ -40,9 +41,11 @@ void Bullet::CollisionEvent(class Object *object, Vector normal , unsigned delta
         this->Suicide();
     }
     Tank* tank;
-    if ( (tank = dynamic_cast<Tank*>(object)) != nullptr && tank->Team() != this->friend_id)
+    if ( (tank = dynamic_cast<Tank*>(object)) != nullptr && tank->Team() != this->team_id)
     {
         tank->Damage(this->damage);
+        if(tank->IsLive()==false)
+            sender.lock()->RegisterKill();
         this->Suicide();
     }
     //if(valid == true)

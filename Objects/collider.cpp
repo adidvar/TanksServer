@@ -1,7 +1,7 @@
 #include "collider.h"
 
 Collider::Collider(ObjectInterface &obj, PointShape p):
-    Object(obj, { 0,0 }, { 0,0 } , 0 , false)
+    Object(obj, false)
 {
     shape.shapes.emplace_back(std::move(p));
 }

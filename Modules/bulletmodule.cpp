@@ -27,7 +27,7 @@ boost::json::object BulletModule::GenerateBulletJson(const std::shared_ptr<Bulle
     bulletjson["size_x"] = bullet->size.x;
     bulletjson["size_y"] = bullet->size.y;
     bulletjson["rotate"] = bullet->rotate;
-    bulletjson["team_id"] = bullet->friend_id;
+    bulletjson["team_id"] = bullet->team_id;
     return bulletjson;
 }
 

@@ -1,8 +1,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <vector>
-
 #include "shapes.h"
 #include "mvector.h"
 #include "objectinterface.h"
@@ -12,18 +10,14 @@ class Object
 protected:
     ObjectInterface &interface;
 
-    Vector position;
-    Vector size;
-    float rotate;
     const bool active; //< визначає чи обєкт буде отримувати колізію
 private:
     bool is_live = true;
 
 public:
-    Object (ObjectInterface &interface , Vector position , Vector size , float rotate , bool active);
+    Object (ObjectInterface &interface , bool active);
 
-    virtual MultiPointShape Poligon() const;
-    virtual float Radius() const;
+    virtual MultiPointShape Poligon() const = 0;
     friend bool ExecuteCollision(Object *obj1 , Object *obj2);
 
     virtual void Update(unsigned delta_time);

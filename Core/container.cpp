@@ -44,11 +44,14 @@ void Container::Update(unsigned delta_time)
     for(auto &x : objects)
         x->CollisionCycleBegin(delta_time);
 
-    std::vector<MultiPointShape> colliders;
+    std::vector<std::vector<Line>> colliders;
     std::vector<Vector> n1 , n2;
 
     for(auto &x : objects)
-        colliders.push_back(x->Poligon());
+    {
+        colliders.emplace_back();
+        x->Poligon().ToLines(std::back_inserter(colliders.back()));
+    }
 
     for(size_t first = 0 ; first != active_end && first != objects.size() ; ++first)
     {

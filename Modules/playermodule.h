@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <chrono>
+#include <unordered_map>
 
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio.hpp>

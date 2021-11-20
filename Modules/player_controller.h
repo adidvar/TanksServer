@@ -25,6 +25,7 @@ class player_controller
 
     void destroy();
     void readyread(const boost::system::error_code &code , size_t bytes_transfered); ///< обробка того що прийшло від клієнта
+    void sendevent(std::string* text , const boost::system::error_code& code, size_t bytes_transfered);
 public:
     player_controller(ObjectInterface &interface, tcp::socket*);
     ~player_controller();

@@ -125,15 +125,8 @@ bool ExecuteCollision(Object *obj1, Object *obj2)
 
 
 
-bool GetCollisions(const MultiPointShape & m1, const MultiPointShape &m2, std::vector<Vector> &n1, std::vector<Vector> &n2)
+bool GetCollisions(const std::vector<Line>& lines1, const std::vector<Line> &lines2, std::vector<Vector> &n1, std::vector<Vector> &n2)
 {
-    std::vector<Line> lines1;
-    std::vector<Line> lines2;
-    {
-        m1.ToLines(std::back_inserter(lines1));
-        m2.ToLines(std::back_inserter(lines2));
-    }
-
     bool col = false;
 
     for(Line x1 : lines1)
